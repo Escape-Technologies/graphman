@@ -1,5 +1,7 @@
 # GraphMan
-![graphman](https://raw.githubusercontent.com/Escape-Technologies/graphman/main/graphman.svg)
+<p align="center">
+  <img width="300" src="https://raw.githubusercontent.com/Escape-Technologies/graphman/main/graphman.svg">
+</p>
 *Quikly scaffold a postman collection for a GraphQL API.* 
 
 GraphMan CLI generates an complete collection from a GraphQL endpoint, containing one request per query & mutation, with pre filled fields, parameters and variables. 
