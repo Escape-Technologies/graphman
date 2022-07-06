@@ -21,7 +21,7 @@ GraphMan makes thoses things easy, helping you for:
 *GraphMan uses deno as a javascript / typescript runtime. That allows to run the CLI from the file url.*
 To get started:
 - [Install deno](https://deno.land/#installation)
-- Run: `TODO after upload`
+- Run: `deno run https://raw.githubusercontent.com/Escape-Technologies/graphman/main/src/index.ts <graphql endpoint url>`
 - Import the generated `[...].postman_collection.json` file in postman.
 
 However if you want to run the CLI locally, clone the repo and run: `deno run src/index.ts [url]`
