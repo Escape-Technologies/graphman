@@ -108,7 +108,7 @@ class TypeFormater {
   }
 
   formatField(field: graphql.IntrospectionField): Field {
-    let description = "";
+    let description = "\n";
     if (
       field.description && field.description !== "undefined" &&
       field.description !== ""
