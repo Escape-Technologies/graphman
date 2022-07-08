@@ -32,6 +32,16 @@ However if you want to run the CLI locally, clone the repo and run: `deno run sr
 You can try graphman on public graphql APIs, and it is a great way to get started with graphQL:
 - Rick&Morty API: `deno run https://raw.githubusercontent.com/Escape-Technologies/graphman/main/src/index.ts https://rickandmortyapi.com/graphql`
 
+<p align="center">
+  <img width="300" src="https://raw.githubusercontent.com/Escape-Technologies/graphman/main/collection-example.png">
+</p> 
+*GraphMan collection for the Rick and morty API*
+
+<p align="center">
+  <img width="300" src="https://raw.githubusercontent.com/Escape-Technologies/graphman/main/query-example.png">
+</p> 
+*Character query for the Rick and morty API collection*
+
 ## Issues and contributions
 - Please open an issue if you encounter bugs, with reproduction steps and error message.
 - For feature requests, please open an issue too
