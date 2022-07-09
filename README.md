@@ -9,6 +9,8 @@ GraphMan CLI generates an complete collection from a GraphQL endpoint, containin
 
 *Note: GraphMan is designed for the postman-collection spec 2.1*
 
+✨GraphMan is fully compatible with the Insomnia API Client out of the box!✨
+
 ## Motivation
 Visualizing and exploring existing graphql APIs can be quite daunting. 
 Using postman to manage all your apis is pretty standard, however creating and maintaining collections is difficult.
