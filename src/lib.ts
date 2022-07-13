@@ -47,7 +47,7 @@ function query(url: string, query: string) {
 
 function findType(
   typeName: string,
-  introspectionQuery: graphql.IntrospectionQuery
+  introspectionQuery: graphql.IntrospectionQuery,
 ): graphql.IntrospectionType | undefined {
   const types = introspectionQuery.__schema.types;
   return types.find((type) => type.name === typeName);
@@ -152,7 +152,7 @@ function fieldToItem(
   field: graphql.IntrospectionField,
   url: string,
   typeFormater: TypeFormater,
-  type: "query" | "mutation"
+  type: "query" | "mutation",
 ): PostmanItem {
   let queryVarsDefinition = "";
   let fieldVars = "";
@@ -177,14 +177,14 @@ function fieldToItem(
     fieldVars += "\n\t";
   }
 
-  let formatedFields = "";
+  let formatedFields = "__typename\n";
 
   // @TODO: remove any types
   const _field = field as any;
   const fieldBaseType = typeFormater.getBaseType(_field.type);
   const queryReturnedType = findType(
     fieldBaseType.name,
-    typeFormater.introspection
+    typeFormater.introspection,
   ) as graphql.IntrospectionObjectType;
 
   if (queryReturnedType.kind === "OBJECT") {
@@ -195,16 +195,16 @@ function fieldToItem(
   }
 
   const hasArgs = field.args.length > 0;
-  const hasFields =
-    queryReturnedType.kind === "OBJECT" && queryReturnedType.fields.length > 0;
+  const hasFields = queryReturnedType.kind === "OBJECT" &&
+    queryReturnedType.fields.length > 0;
   const itemQuery = graphql.print(
     graphql.parse(
-      `${type} ${field.name}${hasArgs ? `(${queryVarsDefinition})` : ""}{\n\t${
-        field.name
-      }${hasArgs ? `(${fieldVars})` : ""}${
+      `${type} ${field.name}${
+        hasArgs ? `(${queryVarsDefinition})` : ""
+      }{\n\t${field.name}${hasArgs ? `(${fieldVars})` : ""}${
         hasFields ? `{\n${formatedFields}\t}` : ""
-      }\n}`
-    )
+      }\n}`,
+    ),
   );
 
   const formattedVariables = `{\n${variables}\n}`;
@@ -246,12 +246,12 @@ export async function createPostmanCollection(url: string) {
   const introspectionQuery = introspection.data as graphql.IntrospectionQuery;
 
   const queryType = introspectionQuery.__schema.types.find(
-    (type) => type.name === "Query"
+    (type) => type.name === "Query",
   ) as graphql.IntrospectionObjectType;
   if (!queryType) throw new Error("Query type not found");
 
   const mutationType = introspectionQuery.__schema.types.find(
-    (type) => type.name === "Mutation"
+    (type) => type.name === "Mutation",
   ) as graphql.IntrospectionObjectType;
   if (!queryType) throw new Error("Mutation type not found");
 
