@@ -168,19 +168,19 @@ function fieldToItem(
   field.args.forEach((arg: any, index) => {
     const formatedArg = typeFormater.formatArgument(arg);
     queryVarsDefinition += `${index === 0 ? "" : ","}${
-      field.args.length > 3 ? "\n\t" : " "
+      field.args.length > 3 ? "\n" : " "
     }$${arg.name}: ${formatedArg.formatedType}`;
 
     fieldVars += `${index === 0 ? "" : ", "}${
-      field.args.length > 3 ? "\n\t\t" : " "
+      field.args.length > 3 ? "\n" : " "
     }${arg.name}: $${arg.name}`;
 
-    variables += `${index === 0 ? "" : ",\n"}\t${formatedArg.formatedVariable}`;
+    variables += `${index === 0 ? "" : ",\n"}${formatedArg.formatedVariable}`;
   });
 
   if (field.args.length > 3) {
     queryVarsDefinition += "\n";
-    fieldVars += "\n\t";
+    fieldVars += "\n";
   }
 
   let formatedFields = "__typename\n";
@@ -206,8 +206,8 @@ function fieldToItem(
   const parsed = graphql.parse(
     `${type} ${field.name}${
       hasArgs ? `(${queryVarsDefinition})` : ""
-    }{\n\t${field.name}${hasArgs ? `(${fieldVars})` : ""}${
-      hasFields ? `{\n${formatedFields}\t}` : ""
+    }{\n${field.name}${hasArgs ? `(${fieldVars})` : ""}${
+      hasFields ? `{\n${formatedFields}}` : ""
     }\n}`,
   )
   let itemQuery = graphql.print(
@@ -283,7 +283,7 @@ export async function createPostmanCollection(url: string) {
     item.push(postmanItem);
   });
 
-  const name = url.split("//")[1].split("/")[0] + "-autoGQL";
+  const name = url.split("//")[1].split("/")[0] + "-GraphMan";
   const collection: PostmanCollection = {
     info: {
       name,
