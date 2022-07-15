@@ -79,26 +79,26 @@ class TypeFormater {
     if (type.kind === "LIST" || type.kind === "NON_NULL") {
       return this.getBaseType(type.ofType);
     } else {
-      return { name: type.name, kind: type.kind};
+      return { name: type.name, kind: type.kind };
     }
   }
 
   getDefaultValue(type: string) {
     switch (type) {
       case "ID":
-        return `"0"`
+        return `"0"`;
       case "STRING" || "String":
-        return `""`
+        return `""`;
       case "INT" || "Int":
-        return `0`
+        return `0`;
       case "FLOAT":
-        return `0.0`
+        return `0.0`;
       case "BOOLEAN":
-        return `false`
+        return `false`;
       case "INPUT_OBJECT":
-          return `{}`
+        return `{}`;
       default:
-        return `null`
+        return `null`;
     }
   }
 
@@ -119,8 +119,13 @@ class TypeFormater {
 
     const formatedType = formatArgType(arg.type);
     const baseType = this.getBaseType(arg.type);
-    const defaultNonNullValue = formatedType.replace(baseType.name,this.getDefaultValue(baseType.name)).replaceAll("!","");
-    const defaultValue = formatedType.includes('!') ? defaultNonNullValue : "null";
+    const defaultNonNullValue = formatedType.replace(
+      baseType.name,
+      this.getDefaultValue(baseType.name),
+    ).replaceAll("!", "");
+    const defaultValue = formatedType.includes("!")
+      ? defaultNonNullValue
+      : "null";
     const formatedArg = {
       defaultValue,
       formatedType,
@@ -128,17 +133,21 @@ class TypeFormater {
     };
 
     console.log(defaultNonNullValue);
-    console.log(`tried to replace: ${baseType.name} ; by: ${this.getDefaultValue(baseType.name)}. baseType.name: ${baseType.name} formated type: ${formatedType}`);
+    console.log(
+      `tried to replace: ${baseType.name} ; by: ${
+        this.getDefaultValue(baseType.name)
+      }. baseType.name: ${baseType.name} formated type: ${formatedType}`,
+    );
 
     this.args.set(arg.name, formatedArg);
     return formatedArg;
   }
 
   formatField(field: graphql.IntrospectionField): Field {
-    if(this.fileds.get(field.name)) {
+    if (this.fileds.get(field.name)) {
       return this.fileds.get(field.name) as Field;
     }
-    
+
     let description = "";
     if (
       field.description &&
@@ -172,7 +181,7 @@ class TypeFormater {
 
     const formatedField: Field = {
       formatedField: formatedFieldTxt,
-      tempField: `_${globalThis.crypto.randomUUID().split('-')[0]}\n`,
+      tempField: `_${globalThis.crypto.randomUUID().split("-")[0]}\n`,
     };
 
     this.fileds.set(field.name, formatedField);
@@ -235,7 +244,7 @@ function fieldToItem(
     }{\n${field.name}${hasArgs ? `(${fieldVars})` : ""}${
       hasFields ? `{\n${formatedFields}}` : ""
     }\n}`,
-  )
+  );
   let itemQuery = graphql.print(
     parsed,
   );
@@ -243,7 +252,10 @@ function fieldToItem(
   if (queryReturnedType.kind === "OBJECT") {
     queryReturnedType.fields.forEach((field) => {
       const formatedField = typeFormater.formatField(field);
-      itemQuery = itemQuery.replace(formatedField.tempField, formatedField.formatedField);
+      itemQuery = itemQuery.replace(
+        formatedField.tempField,
+        formatedField.formatedField,
+      );
     });
   }
 
