@@ -65,6 +65,7 @@ interface Field {
   formatedField: string;
   tempField: string; // a hash that will be replaced by the formatedField, after the query is parsed, to keep comments
 }
+
 class TypeFormater {
   args = new Map<string, Argument>();
   fileds = new Map<string, Field>();
@@ -78,7 +79,26 @@ class TypeFormater {
     if (type.kind === "LIST" || type.kind === "NON_NULL") {
       return this.getBaseType(type.ofType);
     } else {
-      return { name: type.name, kind: type.kind };
+      return { name: type.name, kind: type.kind};
+    }
+  }
+
+  getDefaultValue(type: string) {
+    switch (type) {
+      case "ID":
+        return `"0"`
+      case "STRING" || "String":
+        return `""`
+      case "INT" || "Int":
+        return `0`
+      case "FLOAT":
+        return `0.0`
+      case "BOOLEAN":
+        return `false`
+      case "INPUT_OBJECT":
+          return `{}`
+      default:
+        return `null`
     }
   }
 
@@ -97,12 +117,18 @@ class TypeFormater {
       }
     }
 
-    const defaultValue = arg.type.kind === "NON_NULL" ? "#" : "null";
+    const formatedType = formatArgType(arg.type);
+    const baseType = this.getBaseType(arg.type);
+    const defaultNonNullValue = formatedType.replace(baseType.name,this.getDefaultValue(baseType.name)).replaceAll("!","");
+    const defaultValue = formatedType.includes('!') ? defaultNonNullValue : "null";
     const formatedArg = {
       defaultValue,
-      formatedType: formatArgType(arg.type),
-      formatedVariable: `"${arg.name}": ${defaultValue}`,
+      formatedType,
+      formatedVariable: `\t"${arg.name}": ${defaultValue}`,
     };
+
+    console.log(defaultNonNullValue);
+    console.log(`tried to replace: ${baseType.name} ; by: ${this.getDefaultValue(baseType.name)}. baseType.name: ${baseType.name} formated type: ${formatedType}`);
 
     this.args.set(arg.name, formatedArg);
     return formatedArg;
