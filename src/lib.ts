@@ -63,6 +63,7 @@ interface Argument {
 }
 interface Field {
   formatedField: string;
+  tempField: string; // a hash that will be replaced by the formatedField, after the query is parsed, to keep comments
 }
 class TypeFormater {
   args = new Map<string, Argument>();
@@ -108,25 +109,29 @@ class TypeFormater {
   }
 
   formatField(field: graphql.IntrospectionField): Field {
-    let description = "\n";
+    if(this.fileds.get(field.name)) {
+      return this.fileds.get(field.name) as Field;
+    }
+    
+    let description = "";
     if (
       field.description &&
       field.description !== "undefined" &&
       field.description !== ""
     ) {
-      description = ` # ${field.description?.replace("\n", " ")}\n`;
+      description = ` # ${field.description?.replace("\n", " ")}`;
     }
 
     function scalarFormat(field: graphql.IntrospectionField | any) {
-      return `\t\t${field.name}${description}`;
+      return `${field.name}${description}\n`;
     }
 
     function objectFormat(field: graphql.IntrospectionField | any) {
-      return `\t\t# ${field.name}${description}`;
+      return `# ${field.name}${description}\n`;
     }
 
     function othersFormat(field: graphql.IntrospectionField | any) {
-      return `\t\t# ${field.name}${description} # Type: ${field.type?.kind}\n`;
+      return `# ${field.name}${description} # Type: ${field.type?.kind}\n`;
     }
 
     const baseType = this.getBaseType(field.type);
@@ -139,8 +144,9 @@ class TypeFormater {
       formatedFieldTxt = othersFormat(field);
     }
 
-    const formatedField = {
+    const formatedField: Field = {
       formatedField: formatedFieldTxt,
+      tempField: `_${globalThis.crypto.randomUUID().split('-')[0]}\n`,
     };
 
     this.fileds.set(field.name, formatedField);
@@ -190,22 +196,30 @@ function fieldToItem(
   if (queryReturnedType.kind === "OBJECT") {
     queryReturnedType.fields.forEach((field) => {
       const formatedField = typeFormater.formatField(field);
-      formatedFields += formatedField.formatedField;
+      formatedFields += formatedField.tempField;
     });
   }
 
   const hasArgs = field.args.length > 0;
   const hasFields = queryReturnedType.kind === "OBJECT" &&
     queryReturnedType.fields.length > 0;
-  const itemQuery = graphql.print(
-    graphql.parse(
-      `${type} ${field.name}${
-        hasArgs ? `(${queryVarsDefinition})` : ""
-      }{\n\t${field.name}${hasArgs ? `(${fieldVars})` : ""}${
-        hasFields ? `{\n${formatedFields}\t}` : ""
-      }\n}`,
-    ),
+  const parsed = graphql.parse(
+    `${type} ${field.name}${
+      hasArgs ? `(${queryVarsDefinition})` : ""
+    }{\n\t${field.name}${hasArgs ? `(${fieldVars})` : ""}${
+      hasFields ? `{\n${formatedFields}\t}` : ""
+    }\n}`,
+  )
+  let itemQuery = graphql.print(
+    parsed,
   );
+
+  if (queryReturnedType.kind === "OBJECT") {
+    queryReturnedType.fields.forEach((field) => {
+      const formatedField = typeFormater.formatField(field);
+      itemQuery = itemQuery.replace(formatedField.tempField, formatedField.formatedField);
+    });
+  }
 
   const formattedVariables = `{\n${variables}\n}`;
 
