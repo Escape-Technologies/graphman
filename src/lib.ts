@@ -132,13 +132,6 @@ class TypeFormater {
       formatedVariable: `\t"${arg.name}": ${defaultValue}`,
     };
 
-    console.log(defaultNonNullValue);
-    console.log(
-      `tried to replace: ${baseType.name} ; by: ${
-        this.getDefaultValue(baseType.name)
-      }. baseType.name: ${baseType.name} formated type: ${formatedType}`,
-    );
-
     this.args.set(arg.name, formatedArg);
     return formatedArg;
   }
