@@ -1,4 +1,9 @@
-import { createPostmanCollection, saveJsonFormatted } from "./lib.ts";
+import {
+  createPostmanCollection,
+  saveJsonFormatted,
+  needsAuth,
+  askForAuth,
+} from "./lib.ts";
 
 function help() {
   console.log(`Error: not enough arguments.
@@ -18,9 +23,13 @@ if (!urlRegexp.test(url)) {
   console.error(`${url} is not a valid url`);
   Deno.exit(1);
 }
+let authorization;
+if (await needsAuth()) {
+  authorization = await askForAuth();
+}
 console.log(`Creating the postman collection for ${url}`);
 
-const collection = await createPostmanCollection(url);
+const collection = await createPostmanCollection(url, authorization);
 
 const outName = collection.info.name + ".postman_collection.json";
 saveJsonFormatted(collection, outName);

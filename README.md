@@ -33,6 +33,7 @@ CLI from the file url._ To get started:
 - [Install deno](https://deno.land/#installation)
 - Run:
   `deno run https://raw.githubusercontent.com/Escape-Technologies/graphman/main/src/index.ts <graphql endpoint url>`
+- Ask for authorization, type y/Y if authorization is required, else n/N.
 - Import the generated `[...].postman_collection.json` file in postman.
 
 However if you want to run the CLI locally, clone the repo and run:
