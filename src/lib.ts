@@ -8,7 +8,10 @@ interface PostmanItem {
   name: string;
   request: {
     method: string;
-    header: null[];
+    header: {
+      key: string;
+      value: string;
+    }[];
     body: {
       mode: string;
       graphql: {
@@ -211,7 +214,8 @@ function fieldToItem(
   field: graphql.IntrospectionField,
   url: string,
   typeFormater: TypeFormater,
-  type: "query" | "mutation"
+  type: "query" | "mutation",
+  authorization?: string
 ): PostmanItem {
   let queryVarsDefinition = "";
   let fieldVars = "";
@@ -287,7 +291,11 @@ function fieldToItem(
     name: field.name,
     request: {
       method: "POST",
-      header: [],
+      header: [
+        ...(authorization
+          ? [{ key: "Authorization", value: authorization }]
+          : []),
+      ],
       body: {
         mode: "graphql",
         graphql: {
@@ -335,12 +343,24 @@ export async function createPostmanCollection(
   const queryTypeGetter = new TypeFormater(introspectionQuery);
 
   queryType.fields.forEach((field) => {
-    const postmanItem = fieldToItem(field, url, queryTypeGetter, "query");
+    const postmanItem = fieldToItem(
+      field,
+      url,
+      queryTypeGetter,
+      "query",
+      authorization
+    );
     item.push(postmanItem);
   });
 
   mutationType?.fields.forEach((field) => {
-    const postmanItem = fieldToItem(field, url, queryTypeGetter, "mutation");
+    const postmanItem = fieldToItem(
+      field,
+      url,
+      queryTypeGetter,
+      "mutation",
+      authorization
+    );
     item.push(postmanItem);
   });
 
