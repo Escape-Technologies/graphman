@@ -4,7 +4,7 @@ import { parse } from "https://deno.land/std@0.149.0/flags/mod.ts";
 function help() {
   console.log(`Error: not enough arguments.
 Usage:
-	deno run index.ts <GRAPHQL_ENDPOINT_URL> {--out=OUTPUT_FILE}
+	deno run index.ts <GRAPHQL_ENDPOINT_URL> {--out=OUTPUT_FILE, --authorization=AUTHORIZATION_HEADER}
 Help:
   deno run index.ts [--help | -h]
 `);
