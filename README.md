@@ -42,6 +42,11 @@ However if you want to run the CLI locally, clone the repo and run:
 _Note that deno will ask for network and file-system permissions as it's runtime
 is secure by default_
 
+### CLI Options
+- Custom output filename: `--out=FILNAME`
+- Authorization header: `--auth=AUTHORIZATION_HEADER_VALUE`
+- Get help: `--help` or `-h`
+
 ### Examples
 
 You can try graphman on public graphql APIs, and it is a great way to get
