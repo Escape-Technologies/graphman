@@ -186,7 +186,7 @@ function fieldToItem(
   field: graphql.IntrospectionField,
   url: string,
   typeFormater: TypeFormater,
-  type: "query" | "mutation",
+  type: string,
 ): PostmanItem {
   let queryVarsDefinition = "";
   let fieldVars = "";
@@ -290,27 +290,28 @@ export async function createPostmanCollection(url: string) {
   const introspection = await query(url, introspectionQueryString);
   const introspectionQuery = introspection.data as graphql.IntrospectionQuery;
 
+  const queryTypeName = introspectionQuery.__schema.queryType ? introspectionQuery.__schema.queryType.name : null;
+  const mutationTypeName = introspectionQuery.__schema.mutationType ? introspectionQuery.__schema.mutationType.name : null;
+
   const queryType = introspectionQuery.__schema.types.find(
-    (type) => type.name === "Query",
-  ) as graphql.IntrospectionObjectType;
-  if (!queryType) throw new Error("Query type not found");
+    (type) => type.name === queryTypeName,
+  ) as graphql.IntrospectionObjectType | null;
 
   const mutationType = introspectionQuery.__schema.types.find(
-    (type) => type.name === "Mutation",
-  ) as graphql.IntrospectionObjectType;
-  if (!queryType) throw new Error("Mutation type not found");
+    (type) => type.name === mutationTypeName,
+  ) as graphql.IntrospectionObjectType | null;
 
   const item: PostmanItem[] = [];
 
   const queryTypeGetter = new TypeFormater(introspectionQuery);
 
-  queryType.fields.forEach((field) => {
-    const postmanItem = fieldToItem(field, url, queryTypeGetter, "query");
+  queryType?.fields.forEach((field) => {
+    const postmanItem = fieldToItem(field, url, queryTypeGetter, 'query');
     item.push(postmanItem);
   });
 
   mutationType?.fields.forEach((field) => {
-    const postmanItem = fieldToItem(field, url, queryTypeGetter, "mutation");
+    const postmanItem = fieldToItem(field, url, queryTypeGetter, 'mutation');
     item.push(postmanItem);
   });
 
