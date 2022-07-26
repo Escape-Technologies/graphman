@@ -190,10 +190,7 @@ function fieldToItem(
   url: string,
   typeFormater: TypeFormater,
   type: string,
-<<<<<<< HEAD
   authorization?: string
-=======
->>>>>>> fd7960ec1a651d4d7c1b29707e9ebed4e7da7f48
 ): PostmanItem {
   let queryVarsDefinition = "";
   let fieldVars = "";
@@ -322,7 +319,6 @@ export async function createPostmanCollection(
   const queryTypeGetter = new TypeFormater(introspectionQuery);
 
   queryType?.fields.forEach((field) => {
-<<<<<<< HEAD
     const postmanItem = fieldToItem(
       field,
       url,
@@ -330,14 +326,10 @@ export async function createPostmanCollection(
       "query",
       authorization
     );
-=======
-    const postmanItem = fieldToItem(field, url, queryTypeGetter, 'query');
->>>>>>> fd7960ec1a651d4d7c1b29707e9ebed4e7da7f48
     item.push(postmanItem);
   });
 
   mutationType?.fields.forEach((field) => {
-<<<<<<< HEAD
     const postmanItem = fieldToItem(
       field,
       url,
@@ -345,9 +337,6 @@ export async function createPostmanCollection(
       "mutation",
       authorization
     );
-=======
-    const postmanItem = fieldToItem(field, url, queryTypeGetter, 'mutation');
->>>>>>> fd7960ec1a651d4d7c1b29707e9ebed4e7da7f48
     item.push(postmanItem);
   });
 
