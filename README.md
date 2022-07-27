@@ -32,7 +32,7 @@ CLI from the file url._ To get started:
 
 - [Install deno](https://deno.land/#installation)
 - Run:
-  `deno run deno run https://deno.land/x/graphman/src/index.ts <graphql endpoint url>`
+  `deno run deno run https://deno.land/x/graphman@v1.0.1/src/index.ts <graphql endpoint url>`
 - Ask for authorization, type y/Y if authorization is required, else n/N.
 - Import the generated `[...].postman_collection.json` file in postman.
 
