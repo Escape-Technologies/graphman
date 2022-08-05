@@ -34,16 +34,28 @@ you for:
 
 ## Usage
 
+### Run from url
 _GraphMan uses deno as a javascript / typescript runtime. That allows to run the
 CLI from the file url._ To get started:
 
-- [Install deno](https://deno.land/#installation)
-- Run:
+1. [Install deno](https://deno.land/#installation)
+2. Run:
   `deno run https://deno.land/x/graphman@v1.0.1/src/index.ts <graphql endpoint url>`
-- Import the generated `[...].postman_collection.json` file in postman.
+3. Import the generated `[...].postman_collection.json` file in postman.
 
-However if you want to run the CLI locally, clone the repo and run:
-`deno run src/index.ts [url]`
+### Install GraphMan
+If you want to access graphman easly you can "install" it on your machine:
+1. [Install deno](https://deno.land/#installation)
+2. Run: `deno install -r -f --allow-net --allow-write -n graphman https://deno.land/x/graphman/src/index.ts`
+3. The command will output `export PATH="..."` copy paste it in your `~/.bashrc` or `~/.zshrc` file to add graphman to your path.
+You can now run graphman using the `graphman <params>` command! 🎉
+To **update** GraphMan just reproduce the **step 2**.
+
+_Note: this is not a real installation, it just creates a script that basically aliases the run form url command._
+
+### Run locally
+1. Clone the repo
+2. Run `deno run src/index.ts <params>`
 
 _Note that deno will ask for network and file-system permissions as it's runtime
 is secure by default_
