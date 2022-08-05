@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    // @TODO: Add this setting when tests are ready.
+    // "ci": "deno fmt --check && deno lint && deno test -A --unstable"
+    "ci": "deno fmt --check && deno lint"
+  }
+}
