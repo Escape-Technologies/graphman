@@ -51,7 +51,7 @@ function query(url: string, query: string, authorization?: string) {
 
 function findType(
   typeName: string,
-  introspectionQuery: graphql.IntrospectionQuery
+  introspectionQuery: graphql.IntrospectionQuery,
 ): graphql.IntrospectionType | undefined {
   const types = introspectionQuery.__schema.types;
   return types.find((type) => type.name === typeName);
@@ -190,7 +190,7 @@ function fieldToItem(
   url: string,
   typeFormater: TypeFormater,
   type: string,
-  authorization?: string
+  authorization?: string,
 ): PostmanItem {
   let queryVarsDefinition = "";
   let fieldVars = "";
@@ -222,7 +222,7 @@ function fieldToItem(
   const fieldBaseType = typeFormater.getBaseType(_field.type);
   const queryReturnedType = findType(
     fieldBaseType.name,
-    typeFormater.introspection
+    typeFormater.introspection,
   ) as graphql.IntrospectionObjectType;
 
   if (queryReturnedType.kind === "OBJECT") {
@@ -233,14 +233,14 @@ function fieldToItem(
   }
 
   const hasArgs = field.args.length > 0;
-  const hasFields =
-    queryReturnedType.kind === "OBJECT" && queryReturnedType.fields.length > 0;
+  const hasFields = queryReturnedType.kind === "OBJECT" &&
+    queryReturnedType.fields.length > 0;
   const parsed = graphql.parse(
-    `${type} ${field.name}${hasArgs ? `(${queryVarsDefinition})` : ""}{\n${
-      field.name
-    }${hasArgs ? `(${fieldVars})` : ""}${
+    `${type} ${field.name}${
+      hasArgs ? `(${queryVarsDefinition})` : ""
+    }{\n${field.name}${hasArgs ? `(${fieldVars})` : ""}${
       hasFields ? `{\n${formatedFields}}` : ""
-    }\n}`
+    }\n}`,
   );
   let itemQuery = graphql.print(parsed);
 
@@ -249,7 +249,7 @@ function fieldToItem(
       const formatedField = typeFormater.formatField(field);
       itemQuery = itemQuery.replace(
         formatedField.tempField,
-        formatedField.formatedField
+        formatedField.formatedField,
       );
     });
   }
@@ -293,18 +293,22 @@ function fieldToItem(
 
 export async function createPostmanCollection(
   url: string,
-  authorization?: string
+  authorization?: string,
 ) {
   const introspectionQueryString = graphql.getIntrospectionQuery();
   const introspection = await query(
     url,
     introspectionQueryString,
-    authorization
+    authorization,
   );
   const introspectionQuery = introspection.data as graphql.IntrospectionQuery;
 
-  const queryTypeName = introspectionQuery.__schema.queryType ? introspectionQuery.__schema.queryType.name : null;
-  const mutationTypeName = introspectionQuery.__schema.mutationType ? introspectionQuery.__schema.mutationType.name : null;
+  const queryTypeName = introspectionQuery.__schema.queryType
+    ? introspectionQuery.__schema.queryType.name
+    : null;
+  const mutationTypeName = introspectionQuery.__schema.mutationType
+    ? introspectionQuery.__schema.mutationType.name
+    : null;
 
   const queryType = introspectionQuery.__schema.types.find(
     (type) => type.name === queryTypeName,
@@ -324,7 +328,7 @@ export async function createPostmanCollection(
       url,
       queryTypeGetter,
       "query",
-      authorization
+      authorization,
     );
     item.push(postmanItem);
   });
@@ -335,7 +339,7 @@ export async function createPostmanCollection(
       url,
       queryTypeGetter,
       "mutation",
-      authorization
+      authorization,
     );
     item.push(postmanItem);
   });
