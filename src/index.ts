@@ -24,7 +24,7 @@ if (Deno.args.length < 1 || args.help || args.h) {
 }
 
 const url = args._[0];
-const filename = args.out;
+let path = args.out;
 const authorization = args.auth;
 
 const urlRegexp = /https?:\/\/*/;
@@ -36,8 +36,8 @@ console.log(`Creating the postman collection for ${url}`);
 
 const collection = await createPostmanCollection(url, authorization);
 
-const outName = filename || collection.info.name + ".postman_collection.json";
-saveJsonFormatted(collection, outName);
+path = path || "out/" + collection.info.name + ".postman_collection.json";
+saveJsonFormatted(collection, path);
 
-console.log(`Collection saved as ${outName}`);
+console.log(`Collection saved at ${path}`);
 console.log(`Import it in postman and complete the queries ! 🚀`);
