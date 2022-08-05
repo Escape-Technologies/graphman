@@ -41,9 +41,11 @@ However if you want to run the CLI locally, clone the repo and run:
 _Note that deno will ask for network and file-system permissions as it's runtime
 is secure by default_
 
-The relases are mirrored at https://deno.land/x/graphman@VERSION, you can use previous versions if needed.
+The relases are mirrored at https://deno.land/x/graphman@VERSION, you can use
+previous versions if needed.
 
 ### CLI Options
+
 - Custom output filename: `--out=FILNAME`
 - Authorization header: `--auth=AUTHORIZATION_HEADER_VALUE`
 - Get help: `--help` or `-h`
