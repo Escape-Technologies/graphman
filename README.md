@@ -20,7 +20,6 @@ _Note: GraphMan is designed for the postman-collection spec 2.1_
 
 [![CD](https://github.com/Escape-Technologies/graphman/actions/workflows/cd.yaml/badge.svg)](https://github.com/Escape-Technologies/graphman/actions/workflows/cd.yaml)
 [![Checks](https://github.com/Escape-Technologies/graphman/actions/workflows/check.yml/badge.svg)](https://github.com/Escape-Technologies/graphman/actions/workflows/check.yml)
-[![Tests](https://github.com/Escape-Technologies/graphman/actions/workflows/check.yml/badge.svg)](https://github.com/Escape-Technologies/graphman/actions/workflows/check.yml)
 
 ## Motivation
 
