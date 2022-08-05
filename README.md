@@ -2,9 +2,11 @@
 
 <p align="center">
   <img width="300" src="https://raw.githubusercontent.com/Escape-Technologies/graphman/main/graphman.svg">
+  <br>
+  Quickly scaffold a postman collection for a GraphQL API.
 </p>
 
-_Quickly scaffold a postman collection for a GraphQL API._
+---
 
 GraphMan CLI generates an complete collection from a GraphQL endpoint,
 containing one request per query & mutation, with pre filled fields, parameters
@@ -13,6 +15,11 @@ and variables.
 _Note: GraphMan is designed for the postman-collection spec 2.1_
 
 ✨GraphMan is fully compatible with the Insomnia API Client out of the box!✨
+
+### Status
+[![CD](https://github.com/Escape-Technologies/graphman/actions/workflows/cd.yaml/badge.svg)](https://github.com/Escape-Technologies/graphman/actions/workflows/cd.yaml)
+[![Checks](https://github.com/Escape-Technologies/graphman/actions/workflows/check.yml/badge.svg)](https://github.com/Escape-Technologies/graphman/actions/workflows/check.yml)
+[![Tests](https://github.com/Escape-Technologies/graphman/actions/workflows/check.yml/badge.svg)](https://github.com/Escape-Technologies/graphman/actions/workflows/check.yml)
 
 ## Motivation
 
