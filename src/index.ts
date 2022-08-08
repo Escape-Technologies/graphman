@@ -1,5 +1,6 @@
 import { createPostmanCollection, saveJsonFormatted } from "./lib.ts";
 import { parse } from "https://deno.land/std@0.149.0/flags/mod.ts";
+import { ensureDirSync } from "https://deno.land/std@0.151.0/fs/mod.ts";
 
 function help() {
   console.log(`Error: not enough arguments.
@@ -36,8 +37,9 @@ console.log(`Creating the postman collection for ${url}`);
 
 const collection = await createPostmanCollection(url, authorization);
 
-path = path || "out/" + collection.info.name + ".postman_collection.json";
+path = path || "./out/" + collection.info.name + ".postman_collection.json";
+ensureDirSync("./out/");
 saveJsonFormatted(collection, path);
-
 console.log(`Collection saved at ${path}`);
+
 console.log(`Import it in postman and complete the queries ! 🚀`);
