@@ -38,7 +38,7 @@ console.log(`Creating the postman collection for ${url}`);
 const collection = await createPostmanCollection(url, authorization);
 
 path = path || "./out/" + collection.info.name + ".postman_collection.json";
-ensureDirSync('./out/');
+ensureDirSync("./out/");
 saveJsonFormatted(collection, path);
 console.log(`Collection saved at ${path}`);
 

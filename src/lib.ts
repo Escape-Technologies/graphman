@@ -58,7 +58,9 @@ function findType(
 }
 
 export function saveJsonFormatted(json: any, path: string) {
-  Deno.writeTextFileSync(path, JSON.stringify(json, null, "\t"),{create: true});
+  Deno.writeTextFileSync(path, JSON.stringify(json, null, "\t"), {
+    create: true,
+  });
 }
 interface Argument {
   formatedType: string;
