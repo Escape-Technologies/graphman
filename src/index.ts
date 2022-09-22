@@ -1,5 +1,5 @@
 import { fetchIntrospection, saveJsonFormatted } from "./lib.ts";
-import { outrospect } from "./outrospector.ts";
+import { outrospect, outrospectionToJSON } from "./outrospector.ts";
 
 export { outrospect };
 
@@ -9,5 +9,4 @@ export async function createPostmanCollection(
 ) {
   const introspection = await fetchIntrospection(url, authorization);
   const outrospection = outrospect(introspection);
-  saveJsonFormatted(outrospection, "outrospection.json");
 }

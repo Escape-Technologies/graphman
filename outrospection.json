@@ -1,5 +1,370 @@
 {
-	"queries": [],
+	"queries": [
+		{
+			"name": "character",
+			"description": "Get a specific character by ID",
+			"typeName": "Character",
+			"args": {
+				"id": {
+					"name": "id",
+					"typeBaseKind": "SCALAR",
+					"typeName": "ID",
+					"description": "",
+					"nesting": []
+				}
+			}
+		},
+		{
+			"name": "characters",
+			"description": "Get the list of all characters",
+			"typeName": "Characters",
+			"args": {
+				"page": {
+					"name": "page",
+					"typeBaseKind": "SCALAR",
+					"typeName": "Int",
+					"description": "",
+					"nesting": []
+				},
+				"filter": {
+					"name": "filter",
+					"typeBaseKind": "INPUT_OBJECT",
+					"typeName": "FilterCharacter",
+					"description": "",
+					"nesting": []
+				}
+			}
+		},
+		{
+			"name": "charactersByIds",
+			"description": "Get a list of characters selected by ids",
+			"typeName": "Character",
+			"args": {
+				"ids": {
+					"name": "ids",
+					"typeBaseKind": "SCALAR",
+					"typeName": "ID",
+					"description": "",
+					"nesting": []
+				}
+			}
+		},
+		{
+			"name": "location",
+			"description": "Get a specific locations by ID",
+			"typeName": "Location",
+			"args": {
+				"id": {
+					"name": "id",
+					"typeBaseKind": "SCALAR",
+					"typeName": "ID",
+					"description": "",
+					"nesting": []
+				}
+			}
+		},
+		{
+			"name": "locations",
+			"description": "Get the list of all locations",
+			"typeName": "Locations",
+			"args": {
+				"page": {
+					"name": "page",
+					"typeBaseKind": "SCALAR",
+					"typeName": "Int",
+					"description": "",
+					"nesting": []
+				},
+				"filter": {
+					"name": "filter",
+					"typeBaseKind": "INPUT_OBJECT",
+					"typeName": "FilterLocation",
+					"description": "",
+					"nesting": []
+				}
+			}
+		},
+		{
+			"name": "locationsByIds",
+			"description": "Get a list of locations selected by ids",
+			"typeName": "Location",
+			"args": {
+				"ids": {
+					"name": "ids",
+					"typeBaseKind": "SCALAR",
+					"typeName": "ID",
+					"description": "",
+					"nesting": []
+				}
+			}
+		},
+		{
+			"name": "episode",
+			"description": "Get a specific episode by ID",
+			"typeName": "Episode",
+			"args": {
+				"id": {
+					"name": "id",
+					"typeBaseKind": "SCALAR",
+					"typeName": "ID",
+					"description": "",
+					"nesting": []
+				}
+			}
+		},
+		{
+			"name": "episodes",
+			"description": "Get the list of all episodes",
+			"typeName": "Episodes",
+			"args": {
+				"page": {
+					"name": "page",
+					"typeBaseKind": "SCALAR",
+					"typeName": "Int",
+					"description": "",
+					"nesting": []
+				},
+				"filter": {
+					"name": "filter",
+					"typeBaseKind": "INPUT_OBJECT",
+					"typeName": "FilterEpisode",
+					"description": "",
+					"nesting": []
+				}
+			}
+		},
+		{
+			"name": "episodesByIds",
+			"description": "Get a list of episodes selected by ids",
+			"typeName": "Episode",
+			"args": {
+				"ids": {
+					"name": "ids",
+					"typeBaseKind": "SCALAR",
+					"typeName": "ID",
+					"description": "",
+					"nesting": []
+				}
+			}
+		}
+	],
 	"mutations": [],
-	"types": {}
+	"types": {
+		"Character": {
+			"name": "Character",
+			"kind": "OBJECT",
+			"fields": [
+				{
+					"name": "id",
+					"description": "The id of the character.",
+					"typeName": "ID",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "name",
+					"description": "The name of the character.",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "status",
+					"description": "The status of the character ('Alive', 'Dead' or 'unknown').",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "species",
+					"description": "The species of the character.",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "type",
+					"description": "The type or subspecies of the character.",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "gender",
+					"description": "The gender of the character ('Female', 'Male', 'Genderless' or 'unknown').",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "origin",
+					"description": "The character's origin location",
+					"typeName": "Location",
+					"typeBaseKind": "OBJECT"
+				},
+				{
+					"name": "location",
+					"description": "The character's last known location",
+					"typeName": "Location",
+					"typeBaseKind": "OBJECT"
+				},
+				{
+					"name": "image",
+					"description": "Link to the character's image.\nAll images are 300x300px and most are medium shots or portraits since they are intended to be used as avatars.",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "episode",
+					"description": "Episodes in which this character appeared.",
+					"typeName": null,
+					"typeBaseKind": "NON_NULL"
+				},
+				{
+					"name": "created",
+					"description": "Time at which the character was created in the database.",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				}
+			],
+			"description": ""
+		},
+		"Characters": {
+			"name": "Characters",
+			"kind": "OBJECT",
+			"fields": [
+				{
+					"name": "info",
+					"description": "",
+					"typeName": "Info",
+					"typeBaseKind": "OBJECT"
+				},
+				{
+					"name": "results",
+					"description": "",
+					"typeName": null,
+					"typeBaseKind": "LIST"
+				}
+			],
+			"description": ""
+		},
+		"Location": {
+			"name": "Location",
+			"kind": "OBJECT",
+			"fields": [
+				{
+					"name": "id",
+					"description": "The id of the location.",
+					"typeName": "ID",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "name",
+					"description": "The name of the location.",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "type",
+					"description": "The type of the location.",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "dimension",
+					"description": "The dimension in which the location is located.",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "residents",
+					"description": "List of characters who have been last seen in the location.",
+					"typeName": null,
+					"typeBaseKind": "NON_NULL"
+				},
+				{
+					"name": "created",
+					"description": "Time at which the location was created in the database.",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				}
+			],
+			"description": ""
+		},
+		"Locations": {
+			"name": "Locations",
+			"kind": "OBJECT",
+			"fields": [
+				{
+					"name": "info",
+					"description": "",
+					"typeName": "Info",
+					"typeBaseKind": "OBJECT"
+				},
+				{
+					"name": "results",
+					"description": "",
+					"typeName": null,
+					"typeBaseKind": "LIST"
+				}
+			],
+			"description": ""
+		},
+		"Episode": {
+			"name": "Episode",
+			"kind": "OBJECT",
+			"fields": [
+				{
+					"name": "id",
+					"description": "The id of the episode.",
+					"typeName": "ID",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "name",
+					"description": "The name of the episode.",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "air_date",
+					"description": "The air date of the episode.",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "episode",
+					"description": "The code of the episode.",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				},
+				{
+					"name": "characters",
+					"description": "List of characters who have been seen in the episode.",
+					"typeName": null,
+					"typeBaseKind": "NON_NULL"
+				},
+				{
+					"name": "created",
+					"description": "Time at which the episode was created in the database.",
+					"typeName": "String",
+					"typeBaseKind": "SCALAR"
+				}
+			],
+			"description": ""
+		},
+		"Episodes": {
+			"name": "Episodes",
+			"kind": "OBJECT",
+			"fields": [
+				{
+					"name": "info",
+					"description": "",
+					"typeName": "Info",
+					"typeBaseKind": "OBJECT"
+				},
+				{
+					"name": "results",
+					"description": "",
+					"typeName": null,
+					"typeBaseKind": "LIST"
+				}
+			],
+			"description": ""
+		}
+	}
 }

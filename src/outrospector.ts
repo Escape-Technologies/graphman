@@ -152,6 +152,7 @@ export function outrospect(introspection: IntrospectionQuery): Outrospection {
 
   function parseQueryOrMutationType(
     queryOrMutationType: IntrospectionObjectType,
+    is: "query" | "mutation",
   ) {
     queryOrMutationType?.fields.forEach((field) => {
       const baseType = getBaseType(field.type);
@@ -161,6 +162,7 @@ export function outrospect(introspection: IntrospectionQuery): Outrospection {
       );
       const type = parseType(introspectionType);
       outrospection.types.set(type.name, type);
+      console.log("type", type);
       const query: Query = {
         name: field.name,
         description: field.description ?? undefined,
@@ -171,11 +173,32 @@ export function outrospect(introspection: IntrospectionQuery): Outrospection {
       field.args.forEach((arg: IntrospectionInputValue) => {
         query.args.set(arg.name, parseArg(arg));
       });
+
+      if (is === "query") {
+        outrospection.queries.push(query);
+      }
+      if (is === "mutation") {
+        outrospection.mutations.push(query);
+      }
     });
   }
 
-  if (queryType) parseQueryOrMutationType(queryType);
-  if (mutationType) parseQueryOrMutationType(mutationType);
+  if (queryType) parseQueryOrMutationType(queryType, "query");
+  if (mutationType) parseQueryOrMutationType(mutationType, "mutation");
 
   return outrospection;
+}
+
+export function outrospectionToJSON(outrospection: Outrospection) {
+  const queries: any = outrospection.queries;
+  const mutations: any = outrospection.mutations;
+  const types: any = Object.fromEntries(outrospection.types);
+
+  queries.forEach((query: any) => {
+    query.args = Object.fromEntries(query.args);
+  });
+  mutations.forEach((query: any) => {
+    query.args = Object.fromEntries(query.args);
+  });
+  return { queries, mutations, types };
 }
