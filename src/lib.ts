@@ -2,7 +2,7 @@
 // Note: some any types are hard to remove here, because of the recusive types of the introspection
 import * as graphql from "https://esm.sh/graphql@16.5.0";
 
-interface PostmanItem {
+export interface PostmanItem {
   name: string;
   request: {
     method: string;
@@ -27,7 +27,7 @@ interface PostmanItem {
   response: null[];
 }
 
-interface PostmanCollection {
+export interface PostmanCollection {
   info: {
     name: string;
     schema: string;
@@ -62,6 +62,7 @@ export function saveJsonFormatted(json: any, path: string) {
     create: true,
   });
 }
+
 interface Argument {
   formatedType: string;
   formatedVariable: string;
@@ -293,32 +294,44 @@ function fieldToItem(
   return postmanItem;
 }
 
-export async function createPostmanCollection(
-  url: string,
-  authorization?: string,
-) {
+export async function fetchIntrospection(url: string,authorization?: string,) {
   const introspectionQueryString = graphql.getIntrospectionQuery();
   const introspection = await query(
     url,
     introspectionQueryString,
     authorization,
   );
-  const introspectionQuery = introspection.data as graphql.IntrospectionQuery;
+  return introspection.data as graphql.IntrospectionQuery;
+}
 
-  const queryTypeName = introspectionQuery.__schema.queryType
-    ? introspectionQuery.__schema.queryType.name
-    : null;
-  const mutationTypeName = introspectionQuery.__schema.mutationType
-    ? introspectionQuery.__schema.mutationType.name
-    : null;
+export function getQueryAndMutationTypes(introspection: graphql.IntrospectionQuery) {
+  const queryTypeName = introspection.__schema.queryType
+  ? introspection.__schema.queryType.name
+  : null;
+const mutationTypeName = introspection.__schema.mutationType
+  ? introspection.__schema.mutationType.name
+  : null;
 
-  const queryType = introspectionQuery.__schema.types.find(
+
+  const queryType = introspection.__schema.types.find(
     (type) => type.name === queryTypeName,
   ) as graphql.IntrospectionObjectType | null;
 
-  const mutationType = introspectionQuery.__schema.types.find(
+  const mutationType = introspection.__schema.types.find(
     (type) => type.name === mutationTypeName,
   ) as graphql.IntrospectionObjectType | null;
+
+  return {queryType, mutationType}
+}
+
+export async function createPostmanCollection(
+  url: string,
+  authorization?: string,
+) {
+
+  const introspectionQuery = await fetchIntrospection(url,authorization);
+
+  const {queryType, mutationType} = getQueryAndMutationTypes(introspectionQuery);
 
   const item: PostmanItem[] = [];
 
