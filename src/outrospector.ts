@@ -3,7 +3,7 @@ import {
   IntrospectionObjectType,
   IntrospectionQuery,
   IntrospectionType,
-} from "https://esm.sh/v90/graphql@16.5.0/index.d.ts";
+} from "https://esm.sh/v90/graphql@16.5.0";
 import { getQueryAndMutationTypes } from "./lib.ts";
 
 // @TODO add real support for "INTERFACE" | "UNION" | "INPUT_OBJECT"
@@ -16,7 +16,7 @@ type TypeBaseKind =
   | "INTERFACE"
   | "UNION";
 
-interface ObjectField {
+export interface ObjectField {
   name: string;
   description: string | undefined;
   typeName: string;
@@ -30,7 +30,7 @@ interface Type {
   description: string | undefined;
 }
 
-interface Argument {
+export interface Argument {
   name: string;
   typeBaseKind: TypeBaseKind;
   typeName: string;
@@ -38,14 +38,14 @@ interface Argument {
   nesting: ("NON_NULL" | "LIST")[];
 }
 
-interface Query {
+export interface Query {
   name: string;
   description: string | undefined;
   typeName: string;
   args: Map<string, Argument>;
 }
 
-interface Outrospection {
+export interface Outrospection {
   queryTypeName: string | undefined;
   mutationTypeName: string | undefined;
   queries: Query[];
@@ -165,7 +165,6 @@ export function outrospect(introspection: IntrospectionQuery): Outrospection {
       );
       const type = parseType(introspectionType);
       outrospection.types.set(type.name, type);
-      console.log("type", type);
       const query: Query = {
         name: field.name,
         description: field.description ?? undefined,
