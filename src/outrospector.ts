@@ -117,7 +117,7 @@ function getBaseType(
   if (nesting === undefined) nesting = [];
   if (type.kind === "LIST" || type.kind === "NON_NULL") {
     nesting.push(type.kind);
-    return getBaseType(type.ofType);
+    return getBaseType(type.ofType, nesting);
   } else {
     return { typeName: type.name, typeBaseKind: type.kind, nesting };
   }

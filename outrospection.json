@@ -10,7 +10,9 @@
 					"typeBaseKind": "SCALAR",
 					"typeName": "ID",
 					"description": "",
-					"nesting": []
+					"nesting": [
+						"NON_NULL"
+					]
 				}
 			}
 		},
@@ -45,7 +47,11 @@
 					"typeBaseKind": "SCALAR",
 					"typeName": "ID",
 					"description": "",
-					"nesting": []
+					"nesting": [
+						"NON_NULL",
+						"LIST",
+						"NON_NULL"
+					]
 				}
 			}
 		},
@@ -59,7 +65,9 @@
 					"typeBaseKind": "SCALAR",
 					"typeName": "ID",
 					"description": "",
-					"nesting": []
+					"nesting": [
+						"NON_NULL"
+					]
 				}
 			}
 		},
@@ -94,7 +102,11 @@
 					"typeBaseKind": "SCALAR",
 					"typeName": "ID",
 					"description": "",
-					"nesting": []
+					"nesting": [
+						"NON_NULL",
+						"LIST",
+						"NON_NULL"
+					]
 				}
 			}
 		},
@@ -108,7 +120,9 @@
 					"typeBaseKind": "SCALAR",
 					"typeName": "ID",
 					"description": "",
-					"nesting": []
+					"nesting": [
+						"NON_NULL"
+					]
 				}
 			}
 		},
@@ -143,7 +157,11 @@
 					"typeBaseKind": "SCALAR",
 					"typeName": "ID",
 					"description": "",
-					"nesting": []
+					"nesting": [
+						"NON_NULL",
+						"LIST",
+						"NON_NULL"
+					]
 				}
 			}
 		}
