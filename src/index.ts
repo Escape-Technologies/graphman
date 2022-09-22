@@ -1,5 +1,5 @@
 import { fetchIntrospection, saveJsonFormatted } from "./lib.ts";
-import { outrospect, outrospectionToJSON } from "./outrospector.ts";
+import { outrospect, outrospectionToJSON } from "./outrospect.ts";
 
 export { outrospect };
 
