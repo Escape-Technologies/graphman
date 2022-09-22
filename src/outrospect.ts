@@ -1,7 +1,6 @@
 import {
   IntrospectionInputValue,
   IntrospectionObjectType,
-  IntrospectionOutputType,
   IntrospectionQuery,
   IntrospectionType,
 } from "https://esm.sh/v90/graphql@16.5.0/index.d.ts";
@@ -47,6 +46,8 @@ interface Query {
 }
 
 interface Outrospection {
+  queryTypeName: string | undefined;
+  mutationTypeName: string | undefined;
   queries: Query[];
   mutations: Query[];
   // @ TODO: subscriptions
@@ -142,13 +143,15 @@ function parseArg(
 }
 
 export function outrospect(introspection: IntrospectionQuery): Outrospection {
+  const { queryType, mutationType } = getQueryAndMutationTypes(introspection);
+
   const outrospection: Outrospection = {
+    queryTypeName: queryType?.name,
+    mutationTypeName: mutationType?.name,
     queries: [],
     mutations: [],
     types: new Map<string, Type>(),
   };
-
-  const { queryType, mutationType } = getQueryAndMutationTypes(introspection);
 
   function parseQueryOrMutationType(
     queryOrMutationType: IntrospectionObjectType,
@@ -193,6 +196,8 @@ export function outrospectionToJSON(outrospection: Outrospection) {
   const queries: any = outrospection.queries;
   const mutations: any = outrospection.mutations;
   const types: any = Object.fromEntries(outrospection.types);
+  const queryTypeName = outrospection.queryTypeName;
+  const mutationTypeName = outrospection.mutationTypeName;
 
   queries.forEach((query: any) => {
     query.args = Object.fromEntries(query.args);
@@ -200,5 +205,5 @@ export function outrospectionToJSON(outrospection: Outrospection) {
   mutations.forEach((query: any) => {
     query.args = Object.fromEntries(query.args);
   });
-  return { queries, mutations, types };
+  return { queryTypeName, mutationTypeName, queries, mutations, types };
 }
