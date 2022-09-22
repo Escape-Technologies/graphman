@@ -1,6 +1,9 @@
 import { parse } from "https://deno.land/std@0.149.0/flags/mod.ts";
-import { createPostmanCollection, saveJsonFormatted } from "./lib.ts";
+import { saveJsonFormatted } from "./lib.ts";
 import { ensureDirSync } from "https://deno.land/std@0.151.0/fs/mod.ts";
+import { createPostmanCollection } from "./index.ts";
+
+// @TODO: improve the CLI
 
 function help() {
   console.log(`Error: not enough arguments.
