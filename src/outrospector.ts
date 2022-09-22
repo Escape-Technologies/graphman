@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import {
   IntrospectionInputValue,
   IntrospectionObjectType,
@@ -107,7 +108,6 @@ function parseType(
 
 function getBaseType(
   // @ TODO: fix this type
-  // deno-lint-ignore no-explicit-any
   type: any,
   nesting?: ("NON_NULL" | "LIST")[],
 ): {

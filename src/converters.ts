@@ -146,7 +146,7 @@ function formatQuery(
 
   const formattedFieldBuffer = new FormattedFieldBuffer(outrospection);
 
-  let formattedQuery: FormattedQuery = {
+  const formattedQuery: FormattedQuery = {
     args: [],
     fields: [],
     fullQuery: "",

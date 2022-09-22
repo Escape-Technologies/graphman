@@ -1,7 +1,7 @@
 import { outrospectionToQueries } from "./converters.ts";
 import { queryCollectionToPostmanCollection } from "./format.ts";
-import { fetchIntrospection, saveJsonFormatted } from "./lib.ts";
-import { outrospect, outrospectionToJSON } from "./outrospector.ts";
+import { fetchIntrospection } from "./lib.ts";
+import { outrospect } from "./outrospector.ts";
 
 export { outrospect };
 

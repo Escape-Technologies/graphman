@@ -18,6 +18,7 @@ function query(url: string, query: string, authorization?: string) {
   }).then((res) => res.json());
 }
 
+// deno-lint-ignore no-explicit-any
 export function saveJsonFormatted(json: any, path: string) {
   Deno.writeTextFileSync(path, JSON.stringify(json, null, "\t"), {
     create: true,
