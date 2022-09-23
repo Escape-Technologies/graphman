@@ -28,6 +28,8 @@ interface PostmanResponse {
   header: null[];
   cookie: null[];
   _postman_previewlanguage: "json";
+  status: "OK";
+  code: 200;
 }
 export interface PostmanItem {
   name: string;
@@ -92,6 +94,8 @@ function queryToItem(
       header: [],
       cookie: [],
       _postman_previewlanguage: "json",
+      status: "OK",
+      code: 200,
     }],
   };
 
