@@ -25,12 +25,17 @@ export interface PostmanItem {
   response: null[];
 }
 
+export interface PostmanFolder {
+  name: string;
+  item: PostmanItem[];
+}
+
 export interface PostmanCollection {
   info: {
     name: string;
     schema: string;
   };
-  item: PostmanItem[];
+  item: PostmanFolder[];
 }
 
 function queryToItem(
@@ -78,13 +83,15 @@ export function queryCollectionToPostmanCollection(
   url: string,
   authorization?: string,
 ) {
-  const item: PostmanItem[] = [];
+  const item: PostmanFolder[] = [];
+  item.push({ name: "Queries", item: [] });
   queryCollection.queries.forEach((query) => {
-    item.push(queryToItem(query, url, authorization));
+    item[0].item.push(queryToItem(query, url, authorization));
   });
   // @TODO: separate queries and mutations in folders
+  item.push({ name: "Mutations", item: [] });
   queryCollection.mutations.forEach((query) => {
-    item.push(queryToItem(query, url, authorization));
+    item[1].item.push(queryToItem(query, url, authorization));
   });
 
   const name = url.split("//")[1].split("/")[0] + "-GraphMan";
