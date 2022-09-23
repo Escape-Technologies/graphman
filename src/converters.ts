@@ -1,4 +1,5 @@
 import { parse, print } from "https://esm.sh/v90/graphql@16.5.0";
+import { generateMockData, getDefaultTypeValue, MockResponse } from "./mock.ts";
 import { Argument, ObjectField, Outrospection, Query } from "./outrospector.ts";
 
 export interface FormattedArgument {
@@ -18,31 +19,12 @@ export interface FormattedQuery {
   fullQuery: string;
   variables: string;
   outrospectQuery: Query;
+  mockResponse: MockResponse;
 }
 
 export interface QueryCollection {
   queries: FormattedQuery[];
   mutations: FormattedQuery[];
-}
-
-// @TODO: rework this
-function getDefaultValue(type: string) {
-  switch (type) {
-    case "ID":
-      return `"0"`;
-    case "STRING" || "String":
-      return `""`;
-    case "INT" || "Int":
-      return `0`;
-    case "FLOAT":
-      return `0.0`;
-    case "BOOLEAN":
-      return `false`;
-    case "INPUT_OBJECT":
-      return `{}`;
-    default:
-      return `null`;
-  }
 }
 
 function nestedArgToString(arg: Argument, argStr?: string): string {
@@ -64,7 +46,7 @@ function formatArgument(arg: Argument): FormattedArgument {
   const formattedType: string = nestedArgToString(arg);
 
   const defaultNonNullValue = formattedType
-    .replace(arg.typeName, getDefaultValue(arg.typeName))
+    .replace(arg.typeName, String(getDefaultTypeValue(arg.typeName)))
     .replaceAll("!", "");
   const defaultValue = formattedType.includes("!")
     ? defaultNonNullValue
@@ -152,6 +134,7 @@ function formatQuery(
     fullQuery: "",
     variables: "",
     outrospectQuery: query,
+    mockResponse: generateMockData(query, outrospection),
   };
 
   Array.from(query.args).forEach(([_, arg], index) => {

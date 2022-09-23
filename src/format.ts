@@ -1,28 +1,39 @@
 import { FormattedQuery, QueryCollection } from "./converters.ts";
+import { MockResponse } from "./mock.ts";
 
-export interface PostmanItem {
-  name: string;
-  request: {
-    method: string;
-    header: {
-      key: string;
-      value: string;
-    }[];
-    body: {
-      mode: string;
-      graphql: {
-        query: string;
-        variables: string;
-      };
-    };
-    url: {
-      raw: string;
-      protocol: string;
-      host: string[];
-      path: string[];
+interface PostmanRequest {
+  method: string;
+  header: {
+    key: string;
+    value: string;
+  }[];
+  body: {
+    mode: string;
+    graphql: {
+      query: string;
+      variables: string;
     };
   };
-  response: null[];
+  url: {
+    raw: string;
+    protocol: string;
+    host: string[];
+    path: string[];
+  };
+}
+
+interface PostmanResponse {
+  name: string;
+  originalRequest: PostmanRequest;
+  body: string;
+  header: null[];
+  cookie: null[];
+  _postman_previewlanguage: "json";
+}
+export interface PostmanItem {
+  name: string;
+  request: PostmanRequest;
+  response: (PostmanResponse | null)[];
 }
 
 export interface PostmanFolder {
@@ -49,30 +60,40 @@ function queryToItem(
   const host = [...rootUrl.split(".")];
   const protocol = url.split("://")[0];
 
-  const postmanItem: PostmanItem = {
-    name: query.outrospectQuery.name,
-    request: {
-      method: "POST",
-      header: [
-        ...(authorization
-          ? [{ key: "Authorization", value: authorization }]
-          : []),
-      ],
-      body: {
-        mode: "graphql",
-        graphql: {
-          query: query.fullQuery,
-          variables: query.variables,
-        },
-      },
-      url: {
-        raw: url,
-        protocol,
-        host,
-        path,
+  const request: PostmanRequest = {
+    method: "POST",
+    header: [
+      ...(authorization
+        ? [{ key: "Authorization", value: authorization }]
+        : []),
+    ],
+    body: {
+      mode: "graphql",
+      graphql: {
+        query: query.fullQuery,
+        variables: query.variables,
       },
     },
-    response: [],
+    url: {
+      raw: url,
+      protocol,
+      host,
+      path,
+    },
+  };
+
+  const postmanItem: PostmanItem = {
+    name: query.outrospectQuery.name,
+    request: request,
+    response: [{
+      name: query.outrospectQuery.name,
+      originalRequest: request,
+      body: JSON.stringify(query.mockResponse, null, 2),
+      //body: query.mockResponse,
+      header: [],
+      cookie: [],
+      _postman_previewlanguage: "json",
+    }],
   };
 
   return postmanItem;

@@ -8,7 +8,7 @@ import {
 import { getQueryAndMutationTypes } from "./lib.ts";
 
 // @TODO add real support for "INTERFACE" | "UNION" | "INPUT_OBJECT"
-type TypeBaseKind =
+export type TypeBaseKind =
   | "LIST"
   | "NON_NULL"
   | "SCALAR"
