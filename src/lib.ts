@@ -4,18 +4,25 @@ import {
   IntrospectionQuery,
 } from "https://esm.sh/v90/graphql@16.5.0";
 
-function query(url: string, query: string, authorization?: string) {
-  return fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      ...(authorization ? { Authorization: authorization } : {}),
-    },
-    body: JSON.stringify({
-      query,
-    }),
-  }).then((res) => res.json());
+async function query(url: string, query: string, authorization?: string) {
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        ...(authorization ? { Authorization: authorization } : {}),
+      },
+      body: JSON.stringify({
+        query,
+      }),
+    });
+    return await res.json();
+  } catch {
+    throw new Error(
+      "\n\nError fetching introspection query. \n Please verify your URL, authorization, and network connection.\n",
+    );
+  }
 }
 
 // deno-lint-ignore no-explicit-any
@@ -32,6 +39,11 @@ export async function fetchIntrospection(url: string, authorization?: string) {
     introspectionQueryString,
     authorization,
   );
+  if (!introspection.data) {
+    throw new Error(
+      "\n\nError fetching introspection query. \n Please verify your URL, authorization, and network connection.\n",
+    );
+  }
   return introspection.data as IntrospectionQuery;
 }
 
