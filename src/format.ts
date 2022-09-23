@@ -21,6 +21,7 @@ export interface PostmanItem {
       host: string[];
       path: string[];
     };
+    description: string | null;
   };
   response: null[];
 }
@@ -71,6 +72,7 @@ function queryToItem(
         host,
         path,
       },
+      description: query.outrospectQuery.description ?? null,
     },
     response: [],
   };
