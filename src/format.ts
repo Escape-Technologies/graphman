@@ -1,5 +1,4 @@
 import { FormattedQuery, QueryCollection } from "./converters.ts";
-import { MockResponse } from "./mock.ts";
 
 interface PostmanRequest {
   method: string;
