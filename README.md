@@ -41,7 +41,7 @@ CLI from the file url._ To get started:
 
 1. [Install deno](https://deno.land/#installation)
 2. Run:
-   `deno run https://deno.land/x/graphman@v1.1.2/src/lib.ts <graphql endpoint url>`
+   `deno run https://deno.land/x/graphman@v1.1.2/src/cli.ts <graphql endpoint url>`
 3. Import the generated `[...].postman_collection.json` file in postman.
 
 ### Install GraphMan
@@ -50,7 +50,7 @@ If you want to access graphman easly you can "install" it on your machine:
 
 1. [Install deno](https://deno.land/#installation)
 2. Run:
-   `deno install -r -f --allow-net --allow-write -n graphman https://deno.land/x/graphman@v1.1.2/src/lib.ts`
+   `deno install -r -f --allow-net --allow-write -n graphman https://deno.land/x/graphman@v1.1.2/src/cli.ts`
 3. The command will output `export PATH="..."` copy paste it in your `~/.bashrc`
    or `~/.zshrc` file to add graphman to your path. You can now run graphman
    using the `graphman <params>` command! 🎉 To **update** GraphMan just
@@ -82,7 +82,7 @@ You can try graphman on public graphql APIs, and it is a great way to get
 started with graphQL:
 
 - Rick&Morty API:
-  `deno run https://deno.land/x/graphman@v1.1.2/src/lib.ts https://rickandmortyapi.com/graphql`
+  `deno run https://deno.land/x/graphman@v1.1.2/src/cli.ts https://rickandmortyapi.com/graphql`
 
 | <img width="300" src="https://raw.githubusercontent.com/Escape-Technologies/graphman/main/collection-example.png"> |
 | :----------------------------------------------------------------------------------------------------------------: |
