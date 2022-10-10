@@ -229,7 +229,7 @@ export function outrospectionToQueries(
   });
 
   outrospection.mutations.forEach((query) => {
-    collection.queries.push(formatQuery(query, "mutation", outrospection));
+    collection.mutations.push(formatQuery(query, "mutation", outrospection));
   });
 
   return collection;
