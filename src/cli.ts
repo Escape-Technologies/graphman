@@ -36,12 +36,19 @@ if (!urlRegexp.test(url)) {
   console.error(`${url} is not a valid url`);
   Deno.exit(1);
 }
+
+const pathRegexp = /^(.+)\/([^\/]+).json$/;
+if (path && !pathRegexp.test(path)) {
+  console.error(`${path} is not a valid path. It must be a json file path.`);
+  Deno.exit(1);
+}
+
 console.log(`Creating the postman collection for ${url}`);
 
 const collection = await createPostmanCollection(url, authorization);
 
 path = path || "./out/" + collection.info.name + ".postman_collection.json";
-ensureDirSync("./out/");
+path && ensureDirSync("./out/");
 saveJsonFormatted(collection, path);
 console.log(`Collection saved at ${path}`);
 
