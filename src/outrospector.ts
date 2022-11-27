@@ -73,6 +73,8 @@ function parseType(
 ): Type {
   if (
     !(introspectionType.kind === "OBJECT" ||
+      introspectionType.kind === "INTERFACE" ||
+      introspectionType.kind === "UNION" ||
       introspectionType.kind === "ENUM" ||
       introspectionType.kind === "SCALAR")
   ) {
@@ -88,7 +90,9 @@ function parseType(
     description: introspectionType.description ?? undefined,
   };
 
-  if (type.kind === "OBJECT") {
+  if (
+    type.kind === "OBJECT" || type.kind === "INTERFACE"
+  ) {
     type.fields = [];
     const introspectionObjectType =
       introspectionType as IntrospectionObjectType;
@@ -96,7 +100,7 @@ function parseType(
       const fieldType = field.type as IntrospectionType;
       type.fields?.push({
         name: field.name,
-        description: field.description ?? undefined,
+        description: field.description?.replaceAll("\n", " ") ?? undefined,
         typeName: fieldType.name,
         typeBaseKind: field.type.kind,
       });
