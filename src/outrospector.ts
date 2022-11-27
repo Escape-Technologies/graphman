@@ -74,6 +74,7 @@ function parseType(
   if (
     !(introspectionType.kind === "OBJECT" ||
       introspectionType.kind === "INTERFACE" ||
+      introspectionType.kind === "UNION" ||
       introspectionType.kind === "ENUM" ||
       introspectionType.kind === "SCALAR")
   ) {
@@ -88,11 +89,10 @@ function parseType(
     fields: undefined,
     description: introspectionType.description ?? undefined,
   };
-  if (type.kind === "INTERFACE") {
-    console.dir(type);
-  }
 
-  if (type.kind === "OBJECT" || type.kind === "INTERFACE") {
+  if (
+    type.kind === "OBJECT" || type.kind === "INTERFACE"
+  ) {
     type.fields = [];
     const introspectionObjectType =
       introspectionType as IntrospectionObjectType;
