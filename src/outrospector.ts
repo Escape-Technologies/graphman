@@ -73,6 +73,7 @@ function parseType(
 ): Type {
   if (
     !(introspectionType.kind === "OBJECT" ||
+      introspectionType.kind === "INTERFACE" ||
       introspectionType.kind === "ENUM" ||
       introspectionType.kind === "SCALAR")
   ) {
@@ -96,7 +97,7 @@ function parseType(
       const fieldType = field.type as IntrospectionType;
       type.fields?.push({
         name: field.name,
-        description: field.description ?? undefined,
+        description: field.description?.replaceAll("\n", " ") ?? undefined,
         typeName: fieldType.name,
         typeBaseKind: field.type.kind,
       });
