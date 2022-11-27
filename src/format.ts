@@ -97,6 +97,9 @@ export function queryCollectionToPostmanCollection(
   });
 
   const name = url.split("//")[1].split("/")[0] + "-GraphMan";
+  const invalidCharacters = /[^a-zA-Z0-9-_.]/g;
+  // replace invalid characters with underscore
+  name.replace(invalidCharacters, "_");
 
   const collection: PostmanCollection = {
     info: {

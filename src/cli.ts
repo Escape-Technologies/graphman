@@ -1,6 +1,9 @@
 import { parse } from "https://deno.land/std@0.149.0/flags/mod.ts";
 import { saveJsonFormatted } from "./lib.ts";
-import { ensureDirSync } from "https://deno.land/std@0.151.0/fs/mod.ts";
+import {
+  ensureDirSync,
+  ensureFileSync,
+} from "https://deno.land/std@0.151.0/fs/mod.ts";
 import { createPostmanCollection } from "./index.ts";
 
 // @TODO: improve the CLI
@@ -36,12 +39,19 @@ if (!urlRegexp.test(url)) {
   console.error(`${url} is not a valid url`);
   Deno.exit(1);
 }
+
 console.log(`Creating the postman collection for ${url}`);
 
 const collection = await createPostmanCollection(url, authorization);
 
 path = path || "./out/" + collection.info.name + ".postman_collection.json";
-ensureDirSync("./out/");
+path && ensureDirSync("./out/");
+try {
+  !path && ensureFileSync(path);
+} catch (e) {
+  console.error(`Error: ${e.message}`);
+  Deno.exit(1);
+}
 saveJsonFormatted(collection, path);
 console.log(`Collection saved at ${path}`);
 
