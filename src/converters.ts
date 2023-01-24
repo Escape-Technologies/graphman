@@ -102,7 +102,9 @@ function formatField(field: ObjectField): FormattedField {
   let formattedFieldStr = "";
   if (field.typeBaseKind === "SCALAR" || field.typeBaseKind === "ENUM") {
     formattedFieldStr = scalarFormat(field);
-  } else if (field.typeBaseKind === "OBJECT") {
+  } else if (
+    field.typeBaseKind === "OBJECT" || field.typeBaseKind === "INTERFACE"
+  ) {
     formattedFieldStr = objectFormat(field);
   } else {
     formattedFieldStr = othersFormat(field);
@@ -193,9 +195,27 @@ function formatQuery(
     });
   }
 
+  if (returnType && returnType.kind === "UNION") {
+    returnType.possibleTypes?.forEach((possibleType) => {
+      const returnType = outrospection.types.get(possibleType);
+      if (!returnType) {
+        throw new Error(`Type ${possibleType} not found in outrospection`);
+      }
+      let caseFormattedField = `... on ${possibleType} {\n__typename\n`;
+      returnType.fields?.forEach((field) => {
+        const formatedField = formattedFieldBuffer.formatField(field);
+        formattedQuery.fields.push(formatedField);
+        caseFormattedField += formatedField.tempField;
+      });
+      caseFormattedField += "}\n";
+      formatedFields += caseFormattedField;
+    });
+  }
+
   const hasArgs = query.args.size > 0;
-  const hasFields = objectLike &&
-    returnType.fields && returnType.fields?.length > 0;
+  const hasFields = (objectLike &&
+    returnType.fields && returnType.fields?.length > 0) ||
+    returnType.kind === "UNION";
 
   const parsed = parse(
     `${is} ${query.name}${
@@ -207,15 +227,12 @@ function formatQuery(
 
   formattedQuery.fullQuery = print(parsed);
 
-  if (objectLike) {
-    returnType.fields?.forEach((field) => {
-      const formatedField = formattedFieldBuffer.formatField(field);
-      formattedQuery.fullQuery = formattedQuery.fullQuery.replace(
-        formatedField.tempField,
-        formatedField.formatedField,
-      );
-    });
-  }
+  formattedQuery.fields.forEach((field) => {
+    formattedQuery.fullQuery = formattedQuery.fullQuery.replace(
+      field.tempField,
+      field.formatedField,
+    );
+  });
 
   return formattedQuery;
 }

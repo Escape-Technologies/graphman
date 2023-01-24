@@ -4,6 +4,7 @@ import {
   IntrospectionObjectType,
   IntrospectionQuery,
   IntrospectionType,
+  IntrospectionUnionType,
 } from "https://esm.sh/v90/graphql@16.5.0";
 import { getQueryAndMutationTypes } from "./lib.ts";
 
@@ -28,6 +29,7 @@ interface Type {
   name: string;
   kind: TypeBaseKind;
   fields: ObjectField[] | undefined;
+  possibleTypes: string[] | undefined;
   description: string | undefined;
 }
 
@@ -70,6 +72,8 @@ function getTypeFromIntrospection(
 
 function parseType(
   introspectionType: IntrospectionType,
+  introspection: IntrospectionQuery,
+  outrospection: Outrospection,
 ): Type {
   if (
     !(introspectionType.kind === "OBJECT" ||
@@ -87,6 +91,7 @@ function parseType(
     name: introspectionType.name,
     kind: introspectionType.kind,
     fields: undefined,
+    possibleTypes: undefined,
     description: introspectionType.description ?? undefined,
   };
 
@@ -104,6 +109,21 @@ function parseType(
         typeName: fieldType.name,
         typeBaseKind: getBaseType(field.type).typeBaseKind,
       });
+    });
+  }
+
+  if (type.kind === "UNION") {
+    type.possibleTypes = [];
+    const introspectionObjectType = introspectionType as IntrospectionUnionType;
+    // @todo: this could be simplified, see later todo
+    introspectionObjectType.possibleTypes.forEach((possibleType) => {
+      type.possibleTypes?.push(possibleType.name);
+      const parsedPossibleType = parseType(
+        getTypeFromIntrospection(possibleType.name, introspection),
+        introspection,
+        outrospection,
+      );
+      outrospection.types.set(possibleType.name, parsedPossibleType);
     });
   }
 
@@ -161,13 +181,15 @@ export function outrospect(introspection: IntrospectionQuery): Outrospection {
     queryOrMutationType: IntrospectionObjectType,
     is: "query" | "mutation",
   ) {
+    //@todo we should parse all types here rather than just the ones that are used in queries and mutations
+    // this would simplify the code for unions and interfaces
     queryOrMutationType?.fields.forEach((field) => {
       const baseType = getBaseType(field.type);
       const introspectionType = getTypeFromIntrospection(
         baseType.typeName,
         introspection,
       );
-      const type = parseType(introspectionType);
+      const type = parseType(introspectionType, introspection, outrospection);
       outrospection.types.set(type.name, type);
       const query: Query = {
         name: field.name,
