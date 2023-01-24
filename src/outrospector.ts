@@ -102,7 +102,7 @@ function parseType(
         name: field.name,
         description: field.description?.replaceAll("\n", " ") ?? undefined,
         typeName: fieldType.name,
-        typeBaseKind: field.type.kind,
+        typeBaseKind: getBaseType(field.type).typeBaseKind,
       });
     });
   }
