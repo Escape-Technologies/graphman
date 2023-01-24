@@ -181,7 +181,11 @@ function formatQuery(
   if (!returnType) {
     throw new Error(`Type ${query.typeName} not found in outrospection`);
   }
-  if (returnType && returnType.kind === "OBJECT") {
+  const objectLike = returnType.kind === "OBJECT" ||
+    returnType.kind === "INTERFACE";
+  if (
+    returnType && objectLike
+  ) {
     returnType.fields?.forEach((field) => {
       const formatedField = formattedFieldBuffer.formatField(field);
       formattedQuery.fields.push(formatedField);
@@ -190,7 +194,7 @@ function formatQuery(
   }
 
   const hasArgs = query.args.size > 0;
-  const hasFields = returnType.kind === "OBJECT" &&
+  const hasFields = objectLike &&
     returnType.fields && returnType.fields?.length > 0;
 
   const parsed = parse(
@@ -203,7 +207,7 @@ function formatQuery(
 
   formattedQuery.fullQuery = print(parsed);
 
-  if (returnType.kind === "OBJECT") {
+  if (objectLike) {
     returnType.fields?.forEach((field) => {
       const formatedField = formattedFieldBuffer.formatField(field);
       formattedQuery.fullQuery = formattedQuery.fullQuery.replace(

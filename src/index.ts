@@ -17,5 +17,5 @@ export async function createPostmanCollection(
     url,
     authorization,
   );
-  return postmanCollection;
+  return { postmanCollection, outrospection, introspection };
 }
