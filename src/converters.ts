@@ -92,7 +92,7 @@ function formatField(field: ObjectField): FormattedField {
   }
 
   function objectFormat(field: ObjectField) {
-    return `# ${field.name}${description}\n`;
+    return `${field.name}${description}\n`;
   }
 
   function othersFormat(field: ObjectField) {
