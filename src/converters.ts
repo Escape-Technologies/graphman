@@ -137,6 +137,12 @@ class FormattedFieldBuffer {
   }
 }
 
+function commentFromDescription(description: String) {
+  return description.split('\n').map(line => {
+    return `# ${line}`;
+  }).join('\n');
+}
+
 function formatQuery(
   query: Query,
   is: "query" | "mutation",
@@ -177,7 +183,7 @@ function formatQuery(
     fieldVars += "\n";
   }
 
-  let formatedFields = "__typename\n";
+  let formatedFields = "";
 
   const returnType = outrospection.types.get(query.typeName);
   if (!returnType) {
@@ -225,7 +231,7 @@ function formatQuery(
     }\n}`,
   );
 
-  formattedQuery.fullQuery = print(parsed);
+  formattedQuery.fullQuery = `${commentFromDescription(query.description)}\n${print(parsed)}`;
 
   formattedQuery.fields.forEach((field) => {
     formattedQuery.fullQuery = formattedQuery.fullQuery.replace(
