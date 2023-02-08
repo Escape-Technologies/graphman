@@ -42,9 +42,9 @@ if (!urlRegexp.test(url)) {
 
 console.log(`Creating the postman collection for ${url}`);
 
-const collection = await createPostmanCollection(url, authorization);
+const {postmanCollection} = await createPostmanCollection(url, authorization);
 
-path = path || "./out/" + collection.info.name + ".postman_collection.json";
+path = path || "./out/" + postmanCollection.info.name + ".postman_collection.json";
 path && ensureDirSync("./out/");
 try {
   !path && ensureFileSync(path);
@@ -52,7 +52,7 @@ try {
   console.error(`Error: ${e.message}`);
   Deno.exit(1);
 }
-saveJsonFormatted(collection, path);
+saveJsonFormatted(postmanCollection, path);
 console.log(`Collection saved at ${path}`);
 
 console.log(`Import it in postman and complete the queries ! 🚀`);
