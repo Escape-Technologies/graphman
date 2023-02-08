@@ -74,7 +74,6 @@ function nestedArgToString(arg: Argument, argStr?: string): string {
 }
 
 function formatArgument(arg: Argument): FormattedArgument {
-  debugger;
   const formattedType: string = nestedArgToString(arg);
 
   const defaultNonNullValue = formattedType
