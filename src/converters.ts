@@ -25,24 +25,37 @@ export interface QueryCollection {
   mutations: FormattedQuery[];
 }
 
-// @TODO: rework this
-function getDefaultValue(type: string) {
-  switch (type) {
-    case "ID":
+function getDefaultVariableValue(baseType: string, type: string) {
+  // Per GraphQL, there are five basic scalar types:
+  // String, Int, Float, Boolean and ID and in order
+  // to appropriately compare them we should sanitize before
+  // comparison
+    let sanitzedInput = type.toLowerCase();
+    if (sanitzedInput == "id") {
       return `"0"`;
-    case "STRING" || "String":
+    } else if(sanitzedInput == "string") {
       return `""`;
-    case "INT" || "Int":
+    } else if(sanitzedInput == "int") {
       return `0`;
-    case "FLOAT":
+    } else if (sanitzedInput == "float") {
       return `0.0`;
-    case "BOOLEAN":
+    } else if (sanitzedInput == "boolean") {
       return `false`;
-    case "INPUT_OBJECT":
-      return `{}`;
-    default:
-      return `null`;
-  }
+    }
+
+    // For mutations, we can also have input objects for
+    // which the type name is going to be user-defined and as
+    // such we don't want to rely on the name but the base type
+    if(baseType.toLowerCase() == "input_object") {
+      return `{}`
+    }
+
+    // Some implementations can and will define their own scalars,
+    // e.g. Date, URL, Color, etc. Since it's impossible to know
+    // what that type would need as a variable for input, we will
+    // just return null.
+    // This also applies to the ENUM base type.
+    return `null`;
 }
 
 function nestedArgToString(arg: Argument, argStr?: string): string {
@@ -61,11 +74,13 @@ function nestedArgToString(arg: Argument, argStr?: string): string {
 }
 
 function formatArgument(arg: Argument): FormattedArgument {
+  debugger;
   const formattedType: string = nestedArgToString(arg);
 
   const defaultNonNullValue = formattedType
-    .replace(arg.typeName, getDefaultValue(arg.typeName))
+    .replace(arg.typeName, getDefaultVariableValue(arg.typeBaseKind, arg.typeName))
     .replaceAll("!", "");
+  // if a value can be null, always output null, otherwise use the defaultNonNullValue
   const defaultValue = formattedType.includes("!")
     ? defaultNonNullValue
     : "null";
@@ -92,7 +107,7 @@ function formatField(field: ObjectField): FormattedField {
   }
 
   function objectFormat(field: ObjectField) {
-    return `# ${field.name}${description}\n`;
+    return `${field.name}${description}\n`;
   }
 
   function othersFormat(field: ObjectField) {
