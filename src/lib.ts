@@ -11,7 +11,7 @@ async function query(url: string, query: string, authorization?: string) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        ...(authorization ? { Authorization: authorization } : {}),
+        "X-Shopify-Storefront-Access-Token": authorization || "",
       },
       body: JSON.stringify({
         query,
