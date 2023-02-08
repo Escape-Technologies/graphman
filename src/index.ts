@@ -17,7 +17,5 @@ export async function createPostmanCollection(
     url,
     authorization,
   );
-
-  console.log("Postman collection", postmanCollection);
   return { postmanCollection, outrospection, introspection };
 }
