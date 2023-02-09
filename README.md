@@ -17,7 +17,7 @@ _Note: GraphMan is designed for the postman-collection spec 2.1_
 ✨GraphMan is fully compatible with the Insomnia API Client out of the box!✨
 
 ### Status
-
+![Version](https://img.shields.io/github/v/release/Escape-Technologies/graphman)
 [![CD](https://github.com/Escape-Technologies/graphman/actions/workflows/cd.yaml/badge.svg)](https://github.com/Escape-Technologies/graphman/actions/workflows/cd.yaml)
 [![Checks](https://github.com/Escape-Technologies/graphman/actions/workflows/check.yml/badge.svg)](https://github.com/Escape-Technologies/graphman/actions/workflows/check.yml)
 
