@@ -30,16 +30,16 @@ function getDefaultVariableValue(baseType: string, type: string) {
   // String, Int, Float, Boolean and ID and in order
   // to appropriately compare them we should sanitize before
   // comparison
-  let sanitzedInput = type.toLowerCase();
-  if (sanitzedInput == "id") {
+  let sanitizedInput = type.toLowerCase();
+  if (sanitizedInput == "id") {
     return `"0"`;
-  } else if (sanitzedInput == "string") {
+  } else if (sanitizedInput == "string") {
     return `""`;
-  } else if (sanitzedInput == "int") {
+  } else if (sanitizedInput == "int") {
     return `0`;
-  } else if (sanitzedInput == "float") {
+  } else if (sanitizedInput == "float") {
     return `0.0`;
-  } else if (sanitzedInput == "boolean") {
+  } else if (sanitizedInput == "boolean") {
     return `false`;
   }
 
