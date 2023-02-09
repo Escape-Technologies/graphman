@@ -42,6 +42,7 @@ export interface PostmanCollection {
 function queryToItem(
   query: FormattedQuery,
   url: string,
+  authorizationHeader?: string,
   authorization?: string,
 ): PostmanItem {
   const baseUrl = url.split("//")[1];
@@ -55,8 +56,8 @@ function queryToItem(
     request: {
       method: "POST",
       header: [
-        ...(authorization
-          ? [{ key: "Authorization", value: authorization }]
+        ...((authorization && authorizationHeader)
+          ? [{ key: authorizationHeader.trim(), value: authorization.trim() }]
           : []),
       ],
       body: {
@@ -83,17 +84,22 @@ function queryToItem(
 export function queryCollectionToPostmanCollection(
   queryCollection: QueryCollection,
   url: string,
+  authorizationHeader?: string,
   authorization?: string,
 ) {
   const item: PostmanFolder[] = [];
   item.push({ name: "Queries", item: [] });
   queryCollection.queries.forEach((query) => {
-    item[0].item.push(queryToItem(query, url, authorization));
+    item[0].item.push(
+      queryToItem(query, url, authorizationHeader, authorization),
+    );
   });
   // @TODO: separate queries and mutations in folders
   item.push({ name: "Mutations", item: [] });
   queryCollection.mutations.forEach((query) => {
-    item[1].item.push(queryToItem(query, url, authorization));
+    item[1].item.push(
+      queryToItem(query, url, authorizationHeader, authorization),
+    );
   });
 
   const name = url.split("//")[1].split("/")[0] + "-GraphMan";

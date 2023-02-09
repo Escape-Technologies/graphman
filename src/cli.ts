@@ -32,7 +32,9 @@ if (Deno.args.length < 1 || args.help || args.h) {
 
 const url = args._[0];
 let path = args.out;
-const authorization = args.auth;
+const authorizationString = args.auth;
+const authorizationHeader = authorizationString?.split(":")[0];
+const authorization = authorizationString?.split(":")[1];
 
 const urlRegexp = /https?:\/\/*/;
 if (!urlRegexp.test(url)) {
@@ -42,9 +44,14 @@ if (!urlRegexp.test(url)) {
 
 console.log(`Creating the postman collection for ${url}`);
 
-const {postmanCollection} = await createPostmanCollection(url, authorization);
+const { postmanCollection } = await createPostmanCollection(
+  url,
+  authorizationHeader,
+  authorization,
+);
 
-path = path || "./out/" + postmanCollection.info.name + ".postman_collection.json";
+path = path ||
+  "./out/" + postmanCollection.info.name + ".postman_collection.json";
 path && ensureDirSync("./out/");
 try {
   !path && ensureFileSync(path);

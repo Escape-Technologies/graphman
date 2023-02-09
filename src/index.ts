@@ -7,14 +7,20 @@ export { outrospect };
 
 export async function createPostmanCollection(
   url: string,
+  authorizationHeader?: string,
   authorization?: string,
 ) {
-  const introspection = await fetchIntrospection(url, authorization);
+  const introspection = await fetchIntrospection(
+    url,
+    authorizationHeader,
+    authorization,
+  );
   const outrospection = outrospect(introspection);
   const queryCollection = outrospectionToQueries(outrospection);
   const postmanCollection = queryCollectionToPostmanCollection(
     queryCollection,
     url,
+    authorizationHeader,
     authorization,
   );
   return { postmanCollection, outrospection, introspection };

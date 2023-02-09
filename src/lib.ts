@@ -4,15 +4,25 @@ import {
   IntrospectionQuery,
 } from "https://esm.sh/v90/graphql@16.5.0";
 
-async function query(url: string, query: string, authorization?: string) {
+async function query(
+  url: string,
+  query: string,
+  authorizationHeader?: string,
+  authorization?: string,
+) {
+  const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+  };
+
+  if (authorizationHeader && authorization) {
+    headers[authorizationHeader.trim()] = authorization.trim();
+  }
+
   try {
     const res = await fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "X-Shopify-Storefront-Access-Token": authorization || "",
-      },
+      headers: headers,
       body: JSON.stringify({
         query,
       }),
@@ -32,11 +42,16 @@ export function saveJsonFormatted(json: any, path: string) {
   });
 }
 
-export async function fetchIntrospection(url: string, authorization?: string) {
+export async function fetchIntrospection(
+  url: string,
+  authorizationHeader?: string,
+  authorization?: string,
+) {
   const introspectionQueryString = getIntrospectionQuery();
   const introspection = await query(
     url,
     introspectionQueryString,
+    authorizationHeader,
     authorization,
   );
   if (!introspection.data) {
