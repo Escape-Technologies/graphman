@@ -1,5 +1,5 @@
 import { parse } from "https://deno.land/std@0.149.0/flags/mod.ts";
-import { saveJsonFormatted } from "./lib.ts";
+import { parseHeaders, saveJsonFormatted } from "./lib.ts";
 import {
   ensureDirSync,
   ensureFileSync,
@@ -11,18 +11,21 @@ import { createPostmanCollection } from "./index.ts";
 function help() {
   console.log(`Error: not enough arguments.
 Usage:
-	deno run index.ts <GRAPHQL_ENDPOINT_URL> {--out=OUTPUT_FILE, --authorization=AUTHORIZATION_HEADER}
+	deno run index.ts <GRAPHQL_ENDPOINT_URL>
+Options:
+  --out=OUTPUT_FILE  Output file path
+  -H="header: value"  Header to add to the request, the flag can be used multiple times.
 Help:
   deno run index.ts [--help | -h]
 `);
 }
 
-const args = parse(Deno.args, { boolean: ["help", "h"] }) as {
+const args = parse(Deno.args, { boolean: ["help", "h"], collect: ["H"] }) as {
   _: [string];
   help?: boolean;
   h?: boolean;
   out?: string;
-  auth?: string;
+  H?: [string];
 };
 
 if (Deno.args.length < 1 || args.help || args.h) {
@@ -32,7 +35,7 @@ if (Deno.args.length < 1 || args.help || args.h) {
 
 const url = args._[0];
 let path = args.out;
-const authorization = args.auth;
+const headers = parseHeaders(args.H);
 
 const urlRegexp = /https?:\/\/*/;
 if (!urlRegexp.test(url)) {
@@ -44,7 +47,7 @@ console.log(`Creating the postman collection for ${url}`);
 
 const { postmanCollection } = await createPostmanCollection(
   url,
-  authorization,
+  headers,
 );
 
 path = path ||

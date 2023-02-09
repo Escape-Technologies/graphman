@@ -4,14 +4,34 @@ import {
   IntrospectionQuery,
 } from "https://esm.sh/v90/graphql@16.5.0";
 
-async function query(url: string, query: string, authorization?: string) {
+export function parseHeaders(rawHeaders: [string] | undefined) {
+  const parsed: Record<string, string> = {};
+  if (!rawHeaders || !rawHeaders.length) return parsed;
+  for (const h of rawHeaders) {
+    try {
+      const [key, value] = h.split(":");
+      parsed[key.trim()] = value.trim();
+    } catch {
+      throw new Error(
+        `\n\nError parsing: \n ${h}. \n Please verify your headers.\n`,
+      );
+    }
+  }
+  return parsed;
+}
+
+async function query(
+  url: string,
+  query: string,
+  headers?: Record<string, string>,
+) {
   try {
     const res = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        ...(authorization ? { Authorization: authorization } : {}),
+        ...headers,
       },
       body: JSON.stringify({
         query,
@@ -32,12 +52,15 @@ export function saveJsonFormatted(json: any, path: string) {
   });
 }
 
-export async function fetchIntrospection(url: string, authorization?: string) {
+export async function fetchIntrospection(
+  url: string,
+  headers?: Record<string, string>,
+) {
   const introspectionQueryString = getIntrospectionQuery();
   const introspection = await query(
     url,
     introspectionQueryString,
-    authorization,
+    headers,
   );
   if (!introspection.data) {
     throw new Error(

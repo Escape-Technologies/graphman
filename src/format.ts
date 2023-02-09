@@ -42,7 +42,7 @@ export interface PostmanCollection {
 function queryToItem(
   query: FormattedQuery,
   url: string,
-  authorization?: string,
+  headers?: Record<string, string>,
 ): PostmanItem {
   const baseUrl = url.split("//")[1];
   const rootUrl = baseUrl.split("/")[0];
@@ -54,11 +54,10 @@ function queryToItem(
     name: query.outrospectQuery.name,
     request: {
       method: "POST",
-      header: [
-        ...(authorization
-          ? [{ key: "Authorization", value: authorization }]
-          : []),
-      ],
+      header: Object.entries(headers ?? {}).map(([key, value]) => ({
+        key,
+        value,
+      })),
       body: {
         mode: "graphql",
         graphql: {
@@ -83,17 +82,17 @@ function queryToItem(
 export function queryCollectionToPostmanCollection(
   queryCollection: QueryCollection,
   url: string,
-  authorization?: string,
+  headers?: Record<string, string>,
 ) {
   const item: PostmanFolder[] = [];
   item.push({ name: "Queries", item: [] });
   queryCollection.queries.forEach((query) => {
-    item[0].item.push(queryToItem(query, url, authorization));
+    item[0].item.push(queryToItem(query, url, headers));
   });
   // @TODO: separate queries and mutations in folders
   item.push({ name: "Mutations", item: [] });
   queryCollection.mutations.forEach((query) => {
-    item[1].item.push(queryToItem(query, url, authorization));
+    item[1].item.push(queryToItem(query, url, headers));
   });
 
   const name = url.split("//")[1].split("/")[0] + "-GraphMan";
