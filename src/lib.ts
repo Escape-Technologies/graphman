@@ -4,26 +4,30 @@ import {
   IntrospectionQuery,
 } from "https://esm.sh/v90/graphql@16.5.0";
 
-export function parseHeaders(rawHeaders: [string] | undefined) {
-  const parsed: Record<string, string> = {};
-  if (!rawHeaders || !rawHeaders.length) return parsed;
-  for (const h of rawHeaders) {
-    try {
-      const [key, value] = h.split(":");
-      parsed[key.trim()] = value.trim();
-    } catch {
+export function parseHeaders(headers: string[]): Array<[string, string]> {
+  const parsedHeaders: Array<[string, string]> = [];
+
+  headers.forEach((header) => {
+    if (typeof header !== "string") {
+      throw new Error(`Header is not a string: ${header}`);
+    }
+    const [key, value] = header.split(": ", 2);
+    if (key && value) {
+      parsedHeaders.push([key.trim(), value.trim()]);
+    } else {
       throw new Error(
-        `\n\nError parsing: \n ${h}. \n Please verify your headers.\n`,
+        `Error parsing header: ${header}. Please verify your headers.`,
       );
     }
-  }
-  return parsed;
+  });
+
+  return parsedHeaders;
 }
 
 async function query(
   url: string,
   query: string,
-  headers?: Record<string, string>,
+  headers: Array<[string, string]>,
 ) {
   try {
     const res = await fetch(url, {
@@ -31,7 +35,7 @@ async function query(
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        ...headers,
+        ...Object.fromEntries(headers || []),
       },
       body: JSON.stringify({
         query,
@@ -54,7 +58,7 @@ export function saveJsonFormatted(json: any, path: string) {
 
 export async function fetchIntrospection(
   url: string,
-  headers?: Record<string, string>,
+  headers?: Array<[string, string]>,
 ) {
   const introspectionQueryString = getIntrospectionQuery();
   const introspection = await query(
