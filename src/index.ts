@@ -11,10 +11,7 @@ export async function createPostmanCollection(
   authHeader?: [string, string],
 ) {
   // Pass all headers to fetchIntrospection, including the global authHeader
-  const allHeaders = headers;
-  if (authHeader) {
-    allHeaders.push(authHeader);
-  }
+  const allHeaders = authHeader ? [...headers, authHeader] : headers;
   const introspection = await fetchIntrospection(url, allHeaders);
   const outrospection = outrospect(introspection);
 
