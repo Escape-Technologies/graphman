@@ -1,5 +1,5 @@
 import { parse } from "https://deno.land/std@0.149.0/flags/mod.ts";
-import { parseHeaders, saveJsonFormatted } from "./lib.ts";
+import { parseHeader, parseHeaders, saveJsonFormatted } from "./lib.ts";
 import {
   ensureDirSync,
   ensureFileSync,
@@ -49,12 +49,10 @@ let path = args.out;
 const headers = parseHeaders(args.H || []);
 
 // Handle the AuthHeader separately
-const authHeader = (args.AuthHeader ?? args.A)
-  ? (args.AuthHeader ?? args.A)!.split(": ", 2) as [string, string]
-  : undefined;
-
-if (authHeader) {
-  headers.push(authHeader); // Add AuthHeader to headers for API access
+const authHeaderRaw = args.AuthHeader ?? args.A;
+let authHeader: [string, string] | undefined;
+if (authHeaderRaw) {
+  authHeader = parseHeader(authHeaderRaw);
 }
 
 const urlRegexp = /https?:\/\/*/;

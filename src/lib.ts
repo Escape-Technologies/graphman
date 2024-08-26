@@ -4,24 +4,14 @@ import {
   IntrospectionQuery,
 } from "https://esm.sh/v90/graphql@16.5.0";
 
+export function parseHeader(h: string): [string, string] {
+  const [key, value] = h.split(": ", 2);
+  if (key && value) return [key.trim(), value.trim()];
+  throw new Error(`Error parsing header: ${h}`);
+}
+
 export function parseHeaders(headers: string[]): Array<[string, string]> {
-  const parsedHeaders: Array<[string, string]> = [];
-
-  headers.forEach((header) => {
-    if (typeof header !== "string") {
-      throw new Error(`Header is not a string: ${header}`);
-    }
-    const [key, value] = header.split(": ", 2);
-    if (key && value) {
-      parsedHeaders.push([key.trim(), value.trim()]);
-    } else {
-      throw new Error(
-        `Error parsing header: ${header}. Please verify your headers.`,
-      );
-    }
-  });
-
-  return parsedHeaders;
+  return headers.map(parseHeader);
 }
 
 async function query(
@@ -58,7 +48,7 @@ export function saveJsonFormatted(json: any, path: string) {
 
 export async function fetchIntrospection(
   url: string,
-  headers?: Array<[string, string]>,
+  headers: Array<[string, string]>,
 ) {
   const introspectionQueryString = getIntrospectionQuery();
   const introspection = await query(

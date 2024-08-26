@@ -18,15 +18,11 @@ export async function createPostmanCollection(
   }
 
   const queryCollection = outrospectionToQueries(outrospection);
-  // Remove the authHeader from individual request headers
-  const headersWithoutAuth = headers.filter(([key]) =>
-    authHeader ? key !== authHeader[0] : true
-  );
 
   const postmanCollection = queryCollectionToPostmanCollection(
     queryCollection,
     url,
-    headersWithoutAuth,
+    headers,
     authHeader,
   );
 
