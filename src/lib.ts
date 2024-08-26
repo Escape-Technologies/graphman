@@ -5,7 +5,7 @@ import {
 } from "https://esm.sh/v90/graphql@16.5.0";
 
 export function parseHeader(h: string): [string, string] {
-  const [key, value] = h.split(": ", 2);
+  const [key, value] = h.split(":", 2);
   if (key && value) return [key.trim(), value.trim()];
   throw new Error(`Error parsing header: ${h}`);
 }
@@ -51,6 +51,7 @@ export async function fetchIntrospection(
   headers: Array<[string, string]>,
 ) {
   const introspectionQueryString = getIntrospectionQuery();
+
   const introspection = await query(
     url,
     introspectionQueryString,
