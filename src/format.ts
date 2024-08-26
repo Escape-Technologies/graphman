@@ -37,12 +37,20 @@ export interface PostmanCollection {
     schema: string;
   };
   item: PostmanFolder[];
+  auth?: {
+    type: string;
+    apikey: {
+      key: string;
+      value: string;
+      type: string;
+    }[];
+  };
 }
 
 function queryToItem(
   query: FormattedQuery,
   url: string,
-  headers?: Record<string, string>,
+  headers: Array<[string, string]>,
 ): PostmanItem {
   const baseUrl = url.split("//")[1];
   const rootUrl = baseUrl.split("/")[0];
@@ -54,7 +62,7 @@ function queryToItem(
     name: query.outrospectQuery.name,
     request: {
       method: "POST",
-      header: Object.entries(headers ?? {}).map(([key, value]) => ({
+      header: headers.map(([key, value]) => ({
         key,
         value,
       })),
@@ -82,18 +90,24 @@ function queryToItem(
 export function queryCollectionToPostmanCollection(
   queryCollection: QueryCollection,
   url: string,
-  headers?: Record<string, string>,
-) {
+  headers: Array<[string, string]>,
+  authHeader?: [string, string],
+): PostmanCollection {
   const item: PostmanFolder[] = [];
-  item.push({ name: "Queries", item: [] });
-  queryCollection.queries.forEach((query) => {
-    item[0].item.push(queryToItem(query, url, headers));
-  });
-  // @TODO: separate queries and mutations in folders
-  item.push({ name: "Mutations", item: [] });
-  queryCollection.mutations.forEach((query) => {
-    item[1].item.push(queryToItem(query, url, headers));
-  });
+
+  if (queryCollection.queries && queryCollection.queries.length > 0) {
+    item.push({ name: "Queries", item: [] });
+    queryCollection.queries.forEach((query) => {
+      item[0].item.push(queryToItem(query, url, headers));
+    });
+  }
+
+  if (queryCollection.mutations && queryCollection.mutations.length > 0) {
+    item.push({ name: "Mutations", item: [] });
+    queryCollection.mutations.forEach((query) => {
+      item[1].item.push(queryToItem(query, url, headers));
+    });
+  }
 
   const name = url.split("//")[1].split("/")[0] + "-GraphMan";
   const invalidCharacters = /[^a-zA-Z0-9-_.]/g;
@@ -108,6 +122,17 @@ export function queryCollectionToPostmanCollection(
     },
     item,
   };
+
+  if (authHeader) {
+    collection.auth = {
+      type: "apikey",
+      apikey: [
+        { key: "in", value: "header", type: "string" },
+        { key: "value", value: authHeader[1], type: "string" },
+        { key: "key", value: authHeader[0], type: "string" },
+      ],
+    };
+  }
 
   return collection;
 }

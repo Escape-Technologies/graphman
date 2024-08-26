@@ -7,15 +7,26 @@ export { outrospect };
 
 export async function createPostmanCollection(
   url: string,
-  headers?: Record<string, string>,
+  headers: Array<[string, string]>,
+  authHeader?: [string, string],
 ) {
-  const introspection = await fetchIntrospection(url, headers);
+  // Pass all headers to fetchIntrospection, including the global authHeader
+  const allHeaders = authHeader ? [...headers, authHeader] : headers;
+  const introspection = await fetchIntrospection(url, allHeaders);
   const outrospection = outrospect(introspection);
+
+  if (!outrospection || !outrospection.queries) {
+    throw new Error("Invalid outrospection data: missing 'queries' property");
+  }
+
   const queryCollection = outrospectionToQueries(outrospection);
+
   const postmanCollection = queryCollectionToPostmanCollection(
     queryCollection,
     url,
     headers,
+    authHeader,
   );
-  return { postmanCollection, outrospection, introspection };
+
+  return postmanCollection;
 }

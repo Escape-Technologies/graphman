@@ -73,8 +73,10 @@ previous versions if needed.
 
 ### CLI Options
 
-- Custom output filename: `--out=FILNAME`
-- Headers: `-H="header:value"`, can be used multiple times.
+- Custom output filename: `--out=FILENAME`
+- Headers: `-H="header: value"`, can be used multiple times.
+- Global Postman collection authorization header: `--AuthHeader="header: value"`
+  or `-A="header: value"`
 - Get help: `--help` or `-h`
 
 ### Examples
